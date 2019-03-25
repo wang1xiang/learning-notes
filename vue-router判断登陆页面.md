@@ -29,7 +29,7 @@
 * 添加全局前置路由
   ``` javascript
   router.beforeEach((to, from, next) => {
-    let userBean = store.getters.getUserBean
+    let userBean = store.getters.getUserBean || sessionStorage.getItem('userBean')
     if (to.matched.some(record => record.meta.requireAuth)){  // 判断该路由是否需要登录权限
       if (userBean) {  // 判断当前的User是否存在
         if (to.meta.name !== undefined) {
@@ -58,6 +58,7 @@
 ## Login组件中设置
 *
   ``` javascript
+  sessionStorage.setItem('userBean', values.userName)
   this.$store.dispatch('addUserBean', values.userName)
   if(this.$route.query.redirect){
     let redirect = this.$route.query.redirect;
@@ -71,4 +72,5 @@
 * 退出时调用
   ``` javascript
   this.$store.dispatch('removeUserBean')
+  sessionStorage.removeItem('userBean')
   this.$router.push('/login')
