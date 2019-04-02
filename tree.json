@@ -1,0 +1,285 @@
+{
+    "name": "flare",
+    "children": [
+        {
+            "name": "vis",
+            "children": [
+                {
+                    "name": "axis",
+                    "children": [
+                        {
+                            "name": "Axes",
+                            "value": 1302
+                        },
+                        {
+                            "name": "Axis",
+                            "value": 24593
+                        },
+                        {
+                            "name": "AxisGridLine",
+                            "value": 652
+                        },
+                        {
+                            "name": "AxisLabel",
+                            "value": 636
+                        },
+                        {
+                            "name": "CartesianAxes",
+                            "value": 6703
+                        }
+                    ]
+                },
+                {
+                    "name": "data",
+                    "children": [
+                        {
+                            "name": "Data",
+                            "value": 20544
+                        },
+                        {
+                            "name": "DataList",
+                            "value": 19788
+                        },
+                        {
+                            "name": "DataSprite",
+                            "value": 10349
+                        },
+                        {
+                            "name": "EdgeSprite",
+                            "value": 3301
+                        },
+                        {
+                            "name": "NodeSprite",
+                            "value": 19382
+                        },
+                        {
+                            "name": "render",
+                            "children": [
+                                {
+                                    "name": "ArrowType",
+                                    "value": 698
+                                },
+                                {
+                                    "name": "EdgeRenderer",
+                                    "value": 5569
+                                },
+                                {
+                                    "name": "IRenderer",
+                                    "value": 353
+                                },
+                                {
+                                    "name": "ShapeRenderer",
+                                    "value": 2247
+                                }
+                            ]
+                        },
+                        {
+                            "name": "ScaleBinding",
+                            "value": 11275
+                        },
+                        {
+                            "name": "Tree",
+                            "value": 7147
+                        },
+                        {
+                            "name": "TreeBuilder",
+                            "value": 9930
+                        }
+                    ]
+                },
+                {
+                    "name": "events",
+                    "children": [
+                        {
+                            "name": "DataEvent",
+                            "value": 2313
+                        },
+                        {
+                            "name": "SelectionEvent",
+                            "value": 1880
+                        },
+                        {
+                            "name": "TooltipEvent",
+                            "value": 1701
+                        },
+                        {
+                            "name": "VisualizationEvent",
+                            "value": 1117
+                        }
+                    ]
+                },
+                {
+                    "name": "legend",
+                    "children": [
+                        {
+                            "name": "Legend",
+                            "value": 20859
+                        },
+                        {
+                            "name": "LegendItem",
+                            "value": 4614
+                        },
+                        {
+                            "name": "LegendRange",
+                            "value": 10530
+                        }
+                    ]
+                },
+                {
+                    "name": "operator",
+                    "children": [
+                        {
+                            "name": "distortion",
+                            "children": [
+                                {
+                                    "name": "BifocalDistortion",
+                                    "value": 4461
+                                },
+                                {
+                                    "name": "Distortion",
+                                    "value": 6314
+                                },
+                                {
+                                    "name": "FisheyeDistortion",
+                                    "value": 3444
+                                }
+                            ]
+                        },
+                        {
+                            "name": "encoder",
+                            "children": [
+                                {
+                                    "name": "ColorEncoder",
+                                    "value": 3179
+                                },
+                                {
+                                    "name": "Encoder",
+                                    "value": 4060
+                                },
+                                {
+                                    "name": "PropertyEncoder",
+                                    "value": 4138
+                                },
+                                {
+                                    "name": "ShapeEncoder",
+                                    "value": 1690
+                                },
+                                {
+                                    "name": "SizeEncoder",
+                                    "value": 1830
+                                }
+                            ]
+                        },
+                        {
+                            "name": "filter",
+                            "children": [
+                                {
+                                    "name": "FisheyeTreeFilter",
+                                    "value": 5219
+                                },
+                                {
+                                    "name": "GraphDistanceFilter",
+                                    "value": 3165
+                                },
+                                {
+                                    "name": "VisibilityFilter",
+                                    "value": 3509
+                                }
+                            ]
+                        },
+                        {
+                            "name": "IOperator",
+                            "value": 1286
+                        },
+                        {
+                            "name": "label",
+                            "children": [
+                                {
+                                    "name": "Labeler",
+                                    "value": 9956
+                                },
+                                {
+                                    "name": "RadialLabeler",
+                                    "value": 3899
+                                },
+                                {
+                                    "name": "StackedAreaLabeler",
+                                    "value": 3202
+                                }
+                            ]
+                        },
+                        {
+                            "name": "layout",
+                            "children": [
+                                {
+                                    "name": "AxisLayout",
+                                    "value": 6725
+                                },
+                                {
+                                    "name": "BundledEdgeRouter",
+                                    "value": 3727
+                                },
+                                {
+                                    "name": "CircleLayout",
+                                    "value": 9317
+                                },
+                                {
+                                    "name": "CirclePackingLayout",
+                                    "value": 12003
+                                },
+                                {
+                                    "name": "DendrogramLayout",
+                                    "value": 4853
+                                },
+                                {
+                                    "name": "ForceDirectedLayout",
+                                    "value": 8411
+                                },
+                                {
+                                    "name": "IcicleTreeLayout",
+                                    "value": 4864
+                                },
+                                {
+                                    "name": "IndentedTreeLayout",
+                                    "value": 3174
+                                },
+                                {
+                                    "name": "Layout",
+                                    "value": 7881
+                                },
+                                {
+                                    "name": "NodeLinkTreeLayout",
+                                    "value": 12870
+                                },
+                                {
+                                    "name": "PieLayout",
+                                    "value": 2728
+                                },
+                                {
+                                    "name": "RadialTreeLayout",
+                                    "value": 12348
+                                },
+                                {
+                                    "name": "RandomLayout",
+                                    "value": 870
+                                },
+                                {
+                                    "name": "StackedAreaLayout",
+                                    "value": 9121
+                                },
+                                {
+                                    "name": "TreeMapLayout",
+                                    "value": 9191
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Visualization",
+                    "value": 16540
+                }
+            ]
+        }
+    ]
+}
