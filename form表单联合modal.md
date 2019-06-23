@@ -9,6 +9,10 @@
 2.data中初始化form
 ```javascript
 form: this.$form.createForm(this)
+formItemLayout: {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 10 },
+}
 ```
 3.补充form表单，比如校验等
 ```javascript

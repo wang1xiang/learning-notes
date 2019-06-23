@@ -15,11 +15,18 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response.data.message === '请登录') {
-      store.dispatch('Logout')
-      route.replace({ // 跳转到登录页面
-        path: '/login'
-        // query: {redirect: router.currentRoute.fullPath, gameId: store.state.gameId} // 将跳转的路由path作为参数，登录成功后跳转到该路由
+      notification.error({
+        key,
+        message: '错误',
+        description: '登陆已过期，请重新登陆'
       })
+      setTimeout(() => {
+        store.dispatch('Logout')
+        route.replace({ // 跳转到登录页面
+          path: '/login'
+          // query: {redirect: router.currentRoute.fullPath, gameId: store.state.gameId} // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        })
+      }, 1000);
     } else {
       return response
     }
