@@ -1,14 +1,3 @@
-// 浅拷贝
-// 1.只会
-// Array.concat()，Array.slice()，Array.from() 等
-// Object.assign()、es6扩展运算符
-
-// 深拷贝
-// JSON.parse(JSON.stringify())局限性
-// 1.无法实现对函数、RegExp等特殊对象克隆
-// 2.会将对象的constructor构造函数指向Object
-// 3.对象有循环引用时，会报错
-
 /**
  * 实现深拷贝
  * 1.得到所传入源数据的类型Object.prototype.toString.call(src).slice(8, -1)

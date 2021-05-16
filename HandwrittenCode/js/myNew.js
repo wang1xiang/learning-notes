@@ -31,14 +31,14 @@ function myNew() {
 }
 // 2.将构造函数的作用域赋给新对象，就是给这个新对象构造原型链，链接到构造函数的原型对象上，从而新对象就可以访问构造函数中的属性和方法
 function myNew() {
-  // 构造函数是传入的第一个参数，由于arguments是类数组，不能直接使用shift方法，需要使用call来调用Array的shift方法
+  // 构造函数是传入的第一个参数，由于arguments是类数组，不能直接使用shift方法，需要使用call来调用Array的shift方法，调用完成arguments中的第一个参数就没有了
   const constr = Array.prototype.shift.call(arguments)
 
   let obj = new Object(constr.prototype)
   // let obj = Object.create()
 }
 
-// 3.执行构造函数中的代码，为新对象创建属性
+// 3.执行构造函数中的代码，为新对象创建属性，使用apply
 function myNew() {
   const constr = Array.prototype.shift.call(arguments)
   let obj = Object.create(constr.constructor)
