@@ -222,3 +222,67 @@ dep.notify()
 ```
 
 ![观察者模式](./images/观察者模式.jpg)
+
+#### call、apply、bind 模拟实现
+
+- 共同点：改变 this 指向，第一个参数都是 this 指向的对象
+- 不同点
+  - call 传参是单个传递，apply 传参是数组形式，bind 传值和传数组都可以
+  - call 和 apply 函数执行是直接执行，而 bind 函数会返回一个函数，调用的时候才会执行
+
+**注意**
+箭头函数没有自己的 this，通过 call 或 apply 方法调用时，只能传递参数不能绑定 this，第一个参数会被忽略
+
+##### 实现
+
+```js
+// 模拟实现call
+Function.prototype._call = function (context, ...list) {
+  context = context || window
+  // 获取调用_call的函数，就是this
+  context.fn = this
+
+  let result = context.fn(...list)
+  delete context.fn
+  return result
+}
+const value = 'hello'
+const foo = {
+  value: 'nihao',
+}
+
+function bar(...list) {
+  console.log(this.value)
+  console.log(list)
+}
+
+bar._call(foo, 1, 2, 3)
+bar._call(null, 4, 5, 6)
+
+// 模拟实现apply
+Function.prototype._apply = function (context, arr) {
+  context = context || window
+  context.fn = this
+
+  let result = context.fn(...arr)
+  delete context.fn
+  return result
+}
+
+bar._apply(foo, [1, 2, 3])
+bar._apply(null, [4, 5, 6])
+
+// 模拟实现bind
+Function.prototype._bind = function (context, ...arr1) {
+  context = context || window
+  context.fn = this
+
+  return function (...arr2) {
+    return context.fn(...arr1, arr2)
+  }
+}
+
+bar._bind(foo, 1, 2)(3, 4)
+bar._bind(null, 5, 6)(7, 8)
+bar._bind(null)(5, 6, 7, 8)
+```
