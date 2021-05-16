@@ -86,3 +86,139 @@
 - 代码实现
 
 [可视化工具](http://demo.nimius.net/debounce_throttle/)帮助理解
+
+#### Vue 响应式原理
+
+##### 数据响应式原理
+
+- vue2.x 通过 Object.defineProperty()，将 data 中的数据转为 setter/geter，实现响应式，[代码地址]()
+
+  ```js
+  let data = {
+    msg: 'hello',
+    title: 'nihao',
+  }
+  // 模拟 vue 实例
+  let vm = {}
+  Object.keys(data).forEach((key) => {
+    Object.defineProperty(vm, key, {
+      enumrable: true,
+      configurable: true,
+      get() {
+        console.log('getter', data[key])
+        return data[key]
+      },
+      set(newVal) {
+        console.log('setter', key, newVal)
+        if (newVal === data[key]) return
+        data[key] = newVal
+      },
+    })
+  })
+  vm.msg = 'hello world'
+  console.log(vm.msg)
+  ```
+
+  ![2.x响应式实现原理](./images/2.x响应式实现原理.jpg)
+
+- vue3.x 通过 Proxy 实现，直接监听对象
+
+  ```js
+  let data = {
+    msg: 'hello',
+    title: 'nihao',
+  }
+  let vm = new Proxy(data, {
+    get(target, key) {
+      console.log('getter', key, target[key])
+      return target[key]
+    },
+    set(target, key, newVal) {
+      console.log('setter', key, newVal)
+      if (newVal === target[key]) return
+      target[key] = newVal
+    },
+  })
+  vm.title = 'hello world'
+  console.log(vm.title)
+  ```
+
+  ![3.x响应式实现原理](./images/3.x响应式实现原理.jpg)
+
+##### 发布订阅者模式
+
+> vue 兄弟组件通信
+
+```js
+/*
+  vue自定义事件
+  this.$emit('change')
+  this.$on('change', () => {
+    console.log('change')
+  })
+ */
+
+class EventEmitter {
+  constructor() {
+    this.subs = Object.create(null)
+  }
+  $on(eventType, handler) {
+    this.subs[eventType] = this.subs[eventType] || []
+    this.subs[eventType].push(handler)
+  }
+  $emit(eventType) {
+    if (this.subs[eventType]) {
+      this.subs[eventType].forEach((handler) => {
+        handler()
+      })
+    }
+  }
+}
+
+let em = new EventEmitter()
+em.$on('change', () => {
+  console.log('change event1')
+})
+em.$on('change', () => {
+  console.log('change event2')
+})
+em.$emit('change')
+```
+
+![发布订阅者](./images/发布订阅者.jpg)
+
+##### 观察者模式
+
+> 观察者 watcher 和发布者 Dep 组成，事件发生时通过 notify 通知所有观察者
+
+```js
+// 观察者模式是由具体目标调度，比如当事件触发，Dep 就会去调用观察者的方法，所以观察者模式的订阅者与发布者之间是存在依赖的。
+class Dep {
+  constructor() {
+    this.subs = []
+  }
+  addSub(sub) {
+    if (sub && sub.update) {
+      this.subs.push(sub)
+    }
+  }
+  notify() {
+    this.subs.forEach((sub) => {
+      sub.update()
+    })
+  }
+}
+
+class Watcher {
+  update() {
+    console.log('update')
+  }
+}
+
+let dep = new Dep()
+let watcher = new Watcher()
+dep.addSub(watcher)
+dep.notify()
+```
+
+![观察者模式](./images/观察者模式.jpg)
