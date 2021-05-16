@@ -286,3 +286,184 @@ bar._bind(foo, 1, 2)(3, 4)
 bar._bind(null, 5, 6)(7, 8)
 bar._bind(null)(5, 6, 7, 8)
 ```
+
+![call+apply+bind](./images/call+apply+bind.jpg)
+
+#### js 继承的多种实现方式和优缺点
+
+- 原型链继承
+
+  > 1. 实例既是子类的实例也是父类的实例，父类新增的方法/属性，子类都能访问
+  > 2. 引用类型属性被所有实例共享
+  > 3. 创建实例时，不能像 parent 传值
+
+  ```js
+  function Parent() {
+    this.name = 'zhangsan'
+    this.children = ['A', 'B', 'C']
+  }
+  Parent.prototype.getName = function () {
+    console.log(this.name)
+  }
+  function Child() {}
+  Child.prototype = new Parent()
+  let child1 = new Child()
+  child1.getName()
+  child1.name = 'lisi'
+  child1.children.push('name')
+  console.log('child1', child1)
+  let child2 = new Child()
+  console.log('child2', child2)
+  ```
+
+  ![原型链继承弊端](./images/原型链继承弊端.jpg)
+
+- 借用构造函数（经典继承）
+
+  > - 借用父类构造函数增强子类实例，即复制父类实例属性给子类，继承父类实例属性和方法，不能继承原型属性和方法
+  > - 优点：1.避免引用类型被所有实例共享 2.可以直接在 Child 中向 Parent 传参
+  > - 缺点：方法都在构造函数中定义，每次创建实例都会创建一遍方法
+
+  ```js
+  function Parent(name) {
+    this.name = name
+    this.children = ['A', 'B', 'C']
+    this.getName = function () {
+      return this.name
+    }
+  }
+  function Child(name) {
+    Parent.call(this, name)
+  }
+  let child1 = new Child('zhangsan')
+  child1.name = 'lisi'
+  child1.children.push('name')
+  console.log('child1', child1)
+  let child2 = new Child('lisi')
+  console.log('child2', child2)
+  ```
+
+  ![经典继承](./images/经典继承.jpg)
+
+- 组合继承（原型链继承和经典继承双剑合璧）
+
+  > 融合原型链继承和构造继承的优点，通过调用父类构造，继承父类属性并保留传参的优点，通过将父类实例作为子类原型，实现函数复用，是最常见的继承模式
+  > 缺点：调用两次父类构造函数，第一次给子类的原型添加属性，第二次给子类的构造函数添加属性，覆盖子类原型的同名属性，造成性能上的浪费
+
+  ```js
+  function Parent(name) {
+    this.name = name
+    this.children = ['A', 'B', 'C']
+    this.getName = function () {
+      return this.name
+    }
+  }
+  Parent.prototype.getChildren = function () {
+    return this.children
+  }
+  function Child(name, age) {
+    Parent.call(this, name) // 第二次调用父类构造函数
+    this.age = age
+  }
+  Child.prototype = new Parent() // 第一次调用父类构造函数
+  // 矫正 child 的构造函数
+  Child.prototype.constructor = Child
+  let child1 = new Child('zhangsan', 12)
+  child1.children.push('D')
+  console.log(child1)
+  let child2 = new Child('lisi', 13)
+  console.log(child2)
+  ```
+
+  > ![组合继承](./images/组合继承.jpg)
+
+- 原型式继承
+
+  > 本质是对原对象的一个浅拷贝
+  > 父类的引用属性会被所有子类实例共享，子类构建实例时不能向父类传递参数
+
+  ```js
+  function createObj(o) {
+    function F() {}
+    F.prototype = o // 传入的对象作为创建对象的原型
+    return new F()
+  }
+  let Parent = {
+    name: 'name',
+    children: ['A', 'B', 'C'],
+    getName: function () {
+      return this.name
+    },
+  }
+  let child1 = createObj(Parent)
+  child1.children.push('D')
+  console.log(child1)
+  let child2 = createObj(Parent)
+  console.log(child2)
+  ```
+
+  ![原型式继承](./images/原型式继承.jpg)
+
+- 寄生式继承
+
+  > 与工厂模式类似，创建一个用于封装继承过程的函数，在函数内部可增强对象
+  > 父类的引用属性会被所有子类实例共享，子类构建实例时不能向父类传递参数
+
+  ```js
+  function createObj(o) {
+    let clone = Object.create(o) // 使用原型式继承获得一个目标对象的浅复制，然后增强这个浅复制的能力
+    clone.sayName = function () {
+      console.log('say hello')
+    }
+    return clone
+  }
+  let Parent = {
+    name: 'name',
+    children: ['A', 'B', 'C'],
+    getName: function () {
+      return this.name
+    },
+  }
+  let child1 = createObj(Parent)
+  child1.children.push('D')
+  console.log(child1)
+  let child2 = createObj(Parent)
+  console.log(child2)
+  ```
+
+![寄生式继承](./images/寄生式继承.jpg)
+
+- 寄生组合式继承
+
+  > 避免组合继承的缺点（两次调用父类构造函数），让 Child.prototype 间接访问到 Parent.prototype
+  > 原型链保持不变,能正常使用 instanceof 和 isPrototypeOf
+
+  ```js
+  function Parent(name) {
+    this.name = name
+    this.children = ['A', 'B', 'C']
+    this.getName = function () {
+      return this.name
+    }
+  }
+  Parent.prototype.getChildren = function () {
+    return this.children
+  }
+  function Child(name, age) {
+    Parent.call(this, name)
+    this.age = age
+  }
+  // 设置 Child 的 prototype 指向 Parent
+  // let F = function () {}
+  // F.prototype = Parent.prototype
+  // Child.prototype = new F()
+  // 上面的三句话实际上就是类似于：Child.prototype = Object.create(Parent.prototype)
+  Child.prototype = Object.create(Parent.prototype)
+  let child1 = new Child('zhangsan', 12)
+  child1.children.push('D')
+  console.log(child1)
+  let child2 = new Child('lisi', 13)
+  console.log(child2)
+  ```
+
+  ![寄生组合式继承](./images/寄生组合式继承.jpg)
