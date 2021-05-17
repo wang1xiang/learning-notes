@@ -616,3 +616,55 @@ console.log(instanceOf(d, Object))
 ```
 
 ![模拟instanceof](./images/模拟instanceof.jpg)
+
+#### 数组去重
+
+- 基本类型数组去重
+
+  > 使用 Set 可对基本类型的数据去重
+
+  ```js
+  // 值为基本类型数组去重
+  const uniqBy = (arr) => [...new Set(arr)]
+  let a = [
+    1,
+    2,
+    1,
+    2,
+    3,
+    '1',
+    '3',
+    '1',
+    true,
+    false,
+    true,
+    undefined,
+    undefined,
+    null,
+    null,
+  ]
+  console.log(uniqBy(a))
+  let b = [{ a: 123 }, { a: 123 }]
+  console.log(uniqBy(b))
+  ```
+
+  ![数组基本类型数据去重](./images/数组基本类型数据去重.jpg)
+
+- 引用类型数组去重
+
+  > 使用 Map 去重,键值不可重复
+
+  ```js
+  // 值为基本类型数组去重
+  const uniqueBy = (arr, key) => [
+    ...new Map(arr.map((item) => [item[key], item])).values(),
+  ]
+  const singers = [
+    { id: 1, name: 'Leslie Cheung' },
+    { id: 1, name: 'Leslie Cheung' },
+    { id: 2, name: 'Eason Chan' },
+  ]
+  console.log(uniqueBy(singers, 'id'))
+  ```
+
+  ![数组去重引用类型](./images/数组去重引用类型.jpg)
