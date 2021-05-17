@@ -617,7 +617,9 @@ console.log(instanceOf(d, Object))
 
 ![模拟instanceof](./images/模拟instanceof.jpg)
 
-#### 数组去重
+#### 数组处理
+
+##### 数组去重
 
 - 基本类型数组去重
 
@@ -668,3 +670,25 @@ console.log(instanceOf(d, Object))
   ```
 
   ![数组去重引用类型](./images/数组去重引用类型.jpg)
+
+##### 数组扁平化
+
+> reduce + 递归实现
+
+```js
+// 数组扁平化
+const flatten = (arr, deep = 1) => {
+  return arr.reduce((cur, next) => {
+    return Array.isArray(next) && deep > 1
+      ? [...cur, ...flatten(next, deep - 1)]
+      : [...cur, next]
+  }, [])
+}
+
+const arr = [1, [2], [3, [4]]]
+console.log(flatten(arr, 1)) // [1, [2], [3, [4]]]
+console.log(flatten(arr, 2)) // [1，2, [3, 4]]
+console.log(flatten(arr, 3)) // [1，2, 3, 4]
+```
+
+![数组扁平化处理](./images/数组扁平化处理.jpg)
