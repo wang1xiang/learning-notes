@@ -46,10 +46,10 @@ function myNew() {
 }
 
 // 4.如果构造函数有返回值，则返回；否则，就会默认返回新对象
-function myNew1() {
-  const constr = Array.prototype.shift.call(arguments)
-  let obj = Object.create(constr.constructor)
-  const result = constr.apply(obj, arguments)
+function myNew1(context, ...args) {
+  // const constr = Array.prototype.shift.call(arguments)
+  let obj = Object.create(context.constructor)
+  const result = context.apply(obj, args)
 
   // new 如果返回undefined、null和基本类型时，都会返回新对象；而只有返回对象时，才会返回构造函数的返回值
   return result instanceof Object ? result : obj

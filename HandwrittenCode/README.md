@@ -467,3 +467,152 @@ bar._bind(null)(5, 6, 7, 8)
   ```
 
   ![寄生组合式继承](./images/寄生组合式继承.jpg)
+
+- ES6 继承
+
+  > 先创造父类的实例对象（所以必须先调用 super 方法，然后再用子类的构造函数修改 this
+
+  ```js
+  class Super {
+    constructor(foo) {
+      this.foo = foo
+    }
+    printFoo() {
+      console.log(this.foo)
+    }
+  }
+  class Sub extends Super {
+    constructor(foo, bar) {
+      super(foo)
+      this.bar = bar
+    }
+  }
+  ```
+
+#### 类型检测
+
+##### 如何判断
+
+1. typeof
+
+   > 判断一个值属于哪种基本类型
+
+   ```js
+   typeof null // 'object' 无法判定是否为 null
+   typeof undefined // 'undefined'
+
+   typeof {} // 'object'
+   typeof [] // 'object'
+   typeof (() => {}) // 'function'
+   ```
+
+2. instanceof
+
+   > 可以对引用类型进行判定，其原理就是测试构造函数的 prototype 是否出现在被检测对象的原型链上
+
+   ```js
+   [] instanceof Array            // true
+   {} instanceof Object         // true
+   (()=>{}) instanceof Function   // true
+
+   let arr = []
+   arr instanceof Array    // true
+   // nstanceof 仍然无法优雅的判断一个值到底属于数组还是普通对象 Array 属于 Object 子类型
+   arr instanceof Object   // true
+   ```
+
+3. Object.prototype.toString.call()
+
+   > 该方法本质就是依托 Object.prototype.toString() 方法得到对象内部属性 [[Class]
+   > 传入原始类型却能够判定出结果是因为对值进行了包装
+   > null 和 undefined 能够输出结果是内部实现有做处理
+
+   ```js
+   Object.prototype.toString.call({}) // '[object Object]'
+   Object.prototype.toString.call([]) // '[object Array]'
+   Object.prototype.toString.call(() => {}) // '[object Function]'
+   Object.prototype.toString.call('seymoe') // '[object String]'
+   Object.prototype.toString.call(1) // '[object Number]'
+   Object.prototype.toString.call(true) // '[object Boolean]'
+   Object.prototype.toString.call(Symbol()) // '[object Symbol]'
+   Object.prototype.toString.call(null) // '[object Null]'
+   Object.prototype.toString.call(undefined) // '[object Undefined]'
+   Object.prototype.toString.call(new Date()) // '[object Date]'
+   Object.prototype.toString.call(Math) // '[object Math]'
+   Object.prototype.toString.call(new Set()) // '[object Set]'
+   Object.prototype.toString.call(new WeakSet()) // '[object WeakSet]'
+   Object.prototype.toString.call(new Map()) // '[object Map]'
+   Object.prototype.toString.call(new WeakMap()) // '[object WeakMap]'
+   ```
+
+##### 实现一个类型判断函数
+
+1. 判断 null
+2. 判断基础类型
+3. 使用 Object.prototype.toString.call(target)来判断引用类型
+
+> 先判断基础类型因为:虽然 Object.prototype.toString.call()能判断出某值为:number/string/boolean,但是其实在包装时是先将他们转为对象后再判断类型的,JS 包装类型和原始类型差别是使用 typepf 的值是 object
+
+```js
+function getType(target) {
+  // 处理null
+  if (target === null) {
+    return 'null'
+  }
+  // 判断不是基础类型
+  const typeofTarget = typeof target
+  if (typeofTarget !== 'object') {
+    return typeofTarget
+  }
+  // 此时已经是引用类型 使用Object.prototype.toString.call(target)
+  const template = {
+    '[object Object]': 'object',
+    '[object Array]': 'array',
+    '[object Function]': 'function',
+    // 包装类型
+    '[object String]': 'object - string',
+    '[object Number]': 'object - number',
+    '[object Boolean]': 'object - boolean',
+  }
+
+  const typeStr = Object.prototype.toString.call(target)
+  return template[typeStr]
+}
+```
+
+##### 模拟实现 instanceof
+
+> 遍历左边变量的原型链，直到找到右边变量的 prototype，如果没有找到，返回 false
+
+```js
+function instanceOf(left, right) {
+  const proto = left.__proto__
+  const prototype = right.prototype
+  while (true) {
+    if (proto === null) return false
+    if (proto === prototype) return true
+    proto = proto.__proto__
+  }
+}
+let a = []
+console.log(getType(a))
+console.log(instanceOf(a, Array))
+console.log(instanceOf(a, Object))
+
+let b = {}
+console.log(getType(b))
+console.log(instanceOf(b, Array))
+console.log(instanceOf(b, Object))
+
+let c = () => {}
+console.log(getType(c))
+console.log(instanceOf(c, Array))
+console.log(instanceOf(c, Object))
+
+let d = ''
+console.log(getType(d))
+console.log(instanceOf(d, String))
+console.log(instanceOf(d, Object))
+```
+
+![模拟instanceof](./images/模拟instanceof.jpg)
