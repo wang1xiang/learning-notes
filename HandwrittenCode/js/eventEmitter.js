@@ -22,6 +22,10 @@ class EventEmitter {
       })
     }
   }
+  $off(eventType, handler) {
+    const index = this.subs[eventType].indexOf(handler)
+    this.subs[eventType].splice(index, 1)
+  }
 }
 
 let em = new EventEmitter()
