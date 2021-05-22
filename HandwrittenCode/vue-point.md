@@ -1,4 +1,10 @@
-1. 介绍响应式数据原理
+1. 对mvc和mvvm的理解
+   
+   mvc时Medel负责数据存储，View负责视图展示，Controller负责业务逻辑，所有逻辑都在controller难以维护，当数据发生变化时需获取dom，操作属性在重新渲染到视图
+   
+   mvvm就是Model、View、ViewModel，viewModel实现一套响应式机制自动响应model中数据变化，并实现一套更新策略自动将数据变换转为视图更新，解决Mode和View的耦合问题，同时解决大量DOM操作问题
+   
+2. 介绍响应式数据原理
    vue2.x 响应式数据核心是 Object.defineProperty，通过给 data 中的数据添加 getter 和 setter 变为响应式数据，当页面使用时，通过 Dep 类进行依赖收集（收集当前组件的 watcher），如果属性发生变化，通知对应依赖调用 update 方法进行更新
 
    - Observer：设置对象的 getter 和 setter，用于依赖收集和派发更新
@@ -7,12 +13,24 @@
 
    vue3.x 使用 Proxy 代替 Object.defineProperty，Proxy 可以直接监听对象和数组的变化，并且有多达 13 中拦截方法
 
-2. vue 如何检测数组变化
+3. vue双向绑定的原理
+
+   采用数据劫持结合发布订阅模式，通过Object.defineProperty()来劫持各个属性的getter和setter，在数据变动时发布消息给订阅者，触发响应的监听回调
+
+   1. Observer：设置对象的getter和setter，监听数据变化
+   2. compile：解析模板指令，将模板中的变量替换为数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图
+   3. Watcher：是Observer和Compile之间通信的桥梁，只要完成
+      - 自身实例化时往属性订阅器dep中添加自己
+      - 自身必须有一个update方法
+      - 当属性变动时触发dep.notify通知update更新，并触发Compile中绑定的回调
+   4. MVVN作为数据绑定入口，整合Observer、Compile和Watcher三者，通过Observer监听model数据变化，通知Compile来解析编译模板指令，最终利用Watcher搭起Observer和Compiler之间的桥梁，达到数据变化，更新视图；视图交互变化-数据变更的双向绑定效果
+
+4. vue 如何检测数组变化
 
    考虑性能原因没有用 defineProperty 对数组每一项进行拦截，而是通过重写数组方法（shift、unshift、push、pop、splice、sort、reverse）进行重写，修改索引和长度是无法监控的，需要使用以上 7 中重写方法触发数组对应的 watcher
    核心是把数组中会改变原有数组的方法进行重写，当被调用时，调用 dep.notify 方法和 ObserveArray 方法，遍历数组的每一项，把对象的元素转换为响应式对象
 
-3. nextTick(异步执行队列) 实现原理
+5. nextTick(异步执行队列) 实现原理
 
    由来：由于 VUE 的数据驱动视图更新，是异步的，即修改数据的当下，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，再统一进行视图更新。
    在下次 DOM 更新循环结束之后执行回调，在修改数据后立即使用此方法获取更新后的 DOM。原理是通过（promise，mutationObserver,setTimmediate,setTimeout)
@@ -41,13 +59,13 @@
    function render() {
      console.log('渲染')
    }
-
+   
    nextTick(render)
    nextTick(render)
    nextTick(render)
    ```
 
-4. vue 生命周期
+6. vue 生命周期
 
    Vue 生命周期钩子就是回调函数，在创建组件实例的过程中调用对应的钩子方法
 
@@ -87,13 +105,13 @@
    - serverPrefetch
      2.6 新增且只有服务端渲染触发的钩子函数
 
-5. Vue 父子组件生命周期调用顺序
+7. Vue 父子组件生命周期调用顺序
 
    - 组件渲染先父后子，渲染完成先子后父
    - 组件销毁先父后子，销毁完成先子后父
      父组件挂载完成必须等到子组件都挂载完成后，才算父组件挂载完，所以父组件 mounted 肯定时在子组件 mounted 之后执行
 
-6. computed 特点
+8. computed 特点
 
    - computed 内部实现惰性的 computed watcher，不会立刻求值，持有一个 dep 实例
    - 内部通过 this.dirty 属性滚标记计算属性是否需要重新求值
@@ -102,7 +120,7 @@
    - 与监听器区别
      computed watcher 作为缓存功能的观察者，可以将一个或多个 data 属性进行复杂计算生成一个新值，提供给渲染函数使用，当依赖发生变化时，并不会立即求值，而是先标记为脏数据，等下次调用时，再进行计算。而监听器 watcher 不具备缓存性，当监听属性发生变化，立即执行回调
 
-7. watch 中的 deep:true 实现原理
+9. watch 中的 deep:true 实现原理
 
    当指定 deep 为 true 时，如果监听的值为数组，会对对象中每一项进行求值，此时会将当前 watcher 存入到对应属性的依赖中，这样数组中的对象发生变化也会通知数据更新；如果监听值为对象，对 obj.a.b.c 这样深层次的修改也一样会触发 watch ，内部原理是对 deep 的属性使用递归，而且在此过程会不断触发依赖收集，耗费性能
 
@@ -140,11 +158,11 @@
    }
    ```
 
-8. Vue 事件绑定原理
+10. Vue 事件绑定原理
 
    vue 使用 v-on 或@指令绑定事件并提供事件修饰符，基本流程是进行模板编译生成 AST，生成 render 函数后并执行得到 VNode，VNode 生成真实 DOM 或组件时使用 addEventListener 进行事件绑定
 
-9. v-if 和 v-show 区别
+11. v-if 和 v-show 区别
 
   - v-if 在编译过程中被转换为三元表达式，条件不满足时不渲染此节点；v-show 会被编译为指令，条件不满足时控制样式将对应节点隐藏
   - v-if 不是真正的指令，在编译时就被转换，v-if 控制该 DOM 是否渲染；v-show 控制样式
@@ -178,7 +196,7 @@
   - js 操作效率高，可以将 DOM 操作转换为对象操作，最终通过 diff 算法对比差异进行更新 DOM（减少对真实 DOM 的操作）
   - 虚拟 DOM 不依赖真实平台环境从而实现跨平台
 
-**Vnode 描述 DOM**
+  **Vnode 描述 DOM**
   虚拟 DOM 实现是普通对象包含 tag、data、children 等属性对真实节点的描述
 
   ```js
@@ -253,7 +271,7 @@
   如果组件功能多打包出的结果会变大，采用异步方式加载组件。使用import，异步组件会被分开打包，采用异步的方式加载组件，解决组件过大问题，如果不适用异步组件，组件功能较多时打包的结果就比较大
 
 19. keep-alive理解
-  
+
   采用LRU算法（最近最久未使用法），如果数据最近被访问过,那么将来被访问的几率也更高
   keep-alive 的实现正是用到了 LRU 策略,将最近访问的组件 push 到 this.keys 最后面,this.keys[0]也就是最久没被访问的组件,当缓存实例超过 max 设置值,删除 this.keys[0]
   keep-alive实现组件缓存，当组件切换时不会组件进行卸载
@@ -284,10 +302,10 @@
     window.addEventListener('popstate', function(event) {
       console.log(event)
     })
-    ```  
+    ```
 
 21. vue-router中的导航守卫有哪些?
-  
+
   - 全局前置钩子beforeEach
   - 全局解析守卫 beforeResolve
   - 全局后置钩子 afterEach
@@ -317,7 +335,7 @@
   vuex中所有状态更新的唯一方式是提交mutation，异步操作通过action来提交mutation，这样使得可以方便的跟踪每一个状态的变化；如果mutation支持异步操作，就不知道状态时何时更新
 
 23. 为什么Vue3.0采用Proxy
-  
+
   vue2.x中使用递归和遍历data的方式实现数据的响应式处理，如果属性值也是对象，需要深度遍历，而且出于对性能考虑，vue2.x中对数组的处理是通过改写数组的方法从而实现数组的响应式处理，但对于数组的属性变化是检测不到的
 
   - Proxy可以劫持整个对象，并返回一个新的对象
@@ -325,7 +343,7 @@
   - 还可以代理动态增加的属性
 
 24. vue事件机制，手写EventEmitter
- 
+
   Vue 事件机制 本质上就是 一个 发布-订阅 模式的实现
   ```js
   class EventEmitter {
@@ -411,7 +429,7 @@
   在vue中父组件通过prop将数据传递给子组件，子组件修改prop时会抛出错误
   如果子组件想修改数据，需要通过#emit子组件派发事件，父组件接收事件进行更新
 
-  
+
 30. 自定义指令
 
   - 分为全局注册和局部注册
@@ -428,11 +446,12 @@
     - update：组件更新时调用
     - componentUpdated：组件与子组件更新时调用
     - unbind：指令与元素解绑时调用，只执行一次
-  除了update和componentUpdated，其余钩子都有el、binging、vnode三个参数
+    除了update和componentUpdated，其余钩子都有el、binging、vnode三个参数
 
-  案例：使用v-permission设置用户操作权限，对需要权限判断的DOM进行显示隐藏
-  ```js
-  function checkArray(key) {
+​    案例：使用v-permission设置用户操作权限，对需要权限判断的DOM进行显示隐藏
+
+```js
+function checkArray(key) {
     const permissionList = ['add', 'delete', 'watch', 'update']
     return permissionList.includes(key)
   }
@@ -449,4 +468,11 @@
     }
   }
   export default permission
-  ```
+```
+
+31. ajax、fetch和axios区别
+
+  - ajax：页面无需重新加载整个网页的情况下，能够局部更新，Jquery的ajax在原生ajax上做了封装，缺点是回调嵌套不方便，如果使用JqueryAjax需要引入整个jquery
+  - fetch：ajax替代品，优点是：很好的解决回调地狱，基于Promise设计，缺点是IE浏览器完全不支持，可以通过第三方polyfill来支持
+  - axios：对原生XHR的封装，基于Promise，用于浏览器和nodejs，符合最新的ES规范
+    原生XHR几乎很少开发会用，JqueryAjax属于老当益壮的那种，虽然很老，但是很好用，Fetch是属于初生牛犊，还需要慢慢成长，axios就目前来说，算是非常好的了，无脑使用即可。
