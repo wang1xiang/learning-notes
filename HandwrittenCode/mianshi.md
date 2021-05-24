@@ -94,3 +94,161 @@
 
 - 清除浮动
   > 假设想实现两栏布局，可以给文字区域设置 float:left 或 float:right，此时两个元素都设置了浮动，脱离了正常的文档流，实际上浮动元素本身就是 BFC，浮动起来就是一个隔离区，解决浮动问题就需要使用 BFC，设置隔离区域把里面的内容隔离起来，也就是清除浮动，给父元素设置 overflow 触发 BFC
+
+#### 实现两栏布局
+
+```css
+/* 1.flex布局 */
+.container {
+  display: flex;
+}
+.left {
+  background: #e8e8e8;
+  width: 100px;
+  height: 100vh;
+}
+.right {
+  flex: 1;
+  background: #dedede;
+  height: 100vh;
+}
+
+/* 2.float + margin */
+.left {
+  background: #e8e8e8;
+  width: 100px;
+  height: 100vh;
+  float: left;
+}
+.right {
+  background: #dedede;
+  height: 100vh;
+  margin-left: 100px;
+}
+
+/* 3.float + overflow */
+.left {
+  background-color: #e8e8e8;
+  height: 100vh;
+  width: 100px;
+}
+.right {
+  background-color: #dedede;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* 4.float + calc */
+.left {
+  background-color: #e8e8e8;
+  height: 100vh;
+  width: 100px;
+}
+.right {
+  background-color: #dedede;
+  height: 100vh;
+  width: calc(100% - 100px);
+}
+```
+
+#### 实现三栏布局
+
+```css
+/* 1.float + overflow */
+.left {
+  width: 100px;
+  height: 100vh;
+  float: left;
+  background-color: #dedede;
+}
+.center {
+  overflow: hidden;
+  height: 100vh;
+  background-color: #fff;
+}
+.right {
+  width: 100px;
+  height: 100vh;
+  float: right;
+  background-color: #dedede;
+}
+
+/* 2.position */
+.left {
+  position: absolute;
+  width: 100px;
+  height: 100vh;
+  left: 0;
+  background-color: #dedede;
+}
+.center {
+  position: absolute;
+  height: 100vh;
+  right: 100px;
+  left: 100px;
+  background-color: #fff;
+}
+.right {
+  position: absolute;
+  width: 100px;
+  height: 100vh;
+  right: 0;
+  background-color: #dedede;
+}
+/* 3.flex */
+.container {
+  display: flex;
+}
+.left {
+  height: 100vh;
+  width: 100px;
+  background-color: #dedede;
+}
+.center {
+  height: 100vh;
+  flex: 1;
+  background-color: #fff;
+}
+.right {
+  height: 100vh;
+  width: 100px;
+  background-color: #dedede;
+}
+```
+
+#### css 水平垂直居中
+
+```css
+/* 1. flex */
+.wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  width: 100px;
+  height: 100px;
+  background-color: #dedede;
+}
+
+/* 2.flex + margin */
+.wrapper {
+  height: 100vh;
+  display: flex;
+}
+.container {
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  background-color: #dedede;
+}
+/* 3.transform */
+.container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+```
