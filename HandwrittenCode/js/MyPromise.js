@@ -92,11 +92,11 @@ class MyPromise {
     let index = 0
 
     return new MyPromise((resolve, reject) => {
-      array.forEach((item, index) => {
+      arr.forEach((item) => {
         function addData(key, value) {
           result[key] = value
           index++
-          if (index === array.length) resolve(result)
+          if (index === arr.length) resolve(result)
         }
 
         if (item instanceof MyPromise) {

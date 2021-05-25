@@ -1,9 +1,9 @@
-1. 对mvc和mvvm的理解
-   
-   mvc时Medel负责数据存储，View负责视图展示，Controller负责业务逻辑，所有逻辑都在controller难以维护，当数据发生变化时需获取dom，操作属性在重新渲染到视图
-   
-   mvvm就是Model、View、ViewModel，viewModel实现一套响应式机制自动响应model中数据变化，并实现一套更新策略自动将数据变换转为视图更新，解决Mode和View的耦合问题，同时解决大量DOM操作问题
-   
+1. 对 mvc 和 mvvm 的理解
+
+   mvc 时 Medel 负责数据存储，View 负责视图展示，Controller 负责业务逻辑，所有逻辑都在 controller 难以维护，当数据发生变化时需获取 dom，操作属性在重新渲染到视图
+
+   mvvm 就是 Model、View、ViewModel，viewModel 实现一套响应式机制自动响应 model 中数据变化，并实现一套更新策略自动将数据变换转为视图更新，解决 Mode 和 View 的耦合问题，同时解决大量 DOM 操作问题
+
 2. 介绍响应式数据原理
    vue2.x 响应式数据核心是 Object.defineProperty，通过给 data 中的数据添加 getter 和 setter 变为响应式数据，当页面使用时，通过 Dep 类进行依赖收集（收集当前组件的 watcher），如果属性发生变化，通知对应依赖调用 update 方法进行更新
 
@@ -13,17 +13,17 @@
 
    vue3.x 使用 Proxy 代替 Object.defineProperty，Proxy 可以直接监听对象和数组的变化，并且有多达 13 中拦截方法
 
-3. vue双向绑定的原理
+3. vue 双向绑定的原理
 
-   采用数据劫持结合发布订阅模式，通过Object.defineProperty()来劫持各个属性的getter和setter，在数据变动时发布消息给订阅者，触发响应的监听回调
+   采用数据劫持结合发布订阅模式，通过 Object.defineProperty()来劫持各个属性的 getter 和 setter，在数据变动时发布消息给订阅者，触发响应的监听回调
 
-   1. Observer：设置对象的getter和setter，监听数据变化
+   1. Observer：设置对象的 getter 和 setter，监听数据变化
    2. compile：解析模板指令，将模板中的变量替换为数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图
-   3. Watcher：是Observer和Compile之间通信的桥梁，只要完成
-      - 自身实例化时往属性订阅器dep中添加自己
-      - 自身必须有一个update方法
-      - 当属性变动时触发dep.notify通知update更新，并触发Compile中绑定的回调
-   4. MVVN作为数据绑定入口，整合Observer、Compile和Watcher三者，通过Observer监听model数据变化，通知Compile来解析编译模板指令，最终利用Watcher搭起Observer和Compiler之间的桥梁，达到数据变化，更新视图；视图交互变化-数据变更的双向绑定效果
+   3. Watcher：是 Observer 和 Compile 之间通信的桥梁，只要完成
+      - 自身实例化时往属性订阅器 dep 中添加自己
+      - 自身必须有一个 update 方法
+      - 当属性变动时触发 dep.notify 通知 update 更新，并触发 Compile 中绑定的回调
+   4. MVVN 作为数据绑定入口，整合 Observer、Compile 和 Watcher 三者，通过 Observer 监听 model 数据变化，通知 Compile 来解析编译模板指令，最终利用 Watcher 搭起 Observer 和 Compiler 之间的桥梁，达到数据变化，更新视图；视图交互变化-数据变更的双向绑定效果
 
 4. vue 如何检测数组变化
 
@@ -59,7 +59,7 @@
    function render() {
      console.log('渲染')
    }
-   
+
    nextTick(render)
    nextTick(render)
    nextTick(render)
@@ -160,319 +160,327 @@
 
 10. Vue 事件绑定原理
 
-   vue 使用 v-on 或@指令绑定事件并提供事件修饰符，基本流程是进行模板编译生成 AST，生成 render 函数后并执行得到 VNode，VNode 生成真实 DOM 或组件时使用 addEventListener 进行事件绑定
+vue 使用 v-on 或@指令绑定事件并提供事件修饰符，基本流程是进行模板编译生成 AST，生成 render 函数后并执行得到 VNode，VNode 生成真实 DOM 或组件时使用 addEventListener 进行事件绑定
 
 11. v-if 和 v-show 区别
 
-  - v-if 在编译过程中被转换为三元表达式，条件不满足时不渲染此节点；v-show 会被编译为指令，条件不满足时控制样式将对应节点隐藏
-  - v-if 不是真正的指令，在编译时就被转换，v-if 控制该 DOM 是否渲染；v-show 控制样式
-  - v-if 不满足不渲染，v-show 不满足也渲染，只是设置样式
+- v-if 在编译过程中被转换为三元表达式，条件不满足时不渲染此节点；v-show 会被编译为指令，条件不满足时控制样式将对应节点隐藏
+- v-if 不是真正的指令，在编译时就被转换，v-if 控制该 DOM 是否渲染；v-show 控制样式
+- v-if 不满足不渲染，v-show 不满足也渲染，只是设置样式
 
 10. v-for 和 v-if 不能连用
 
-  解析时先解析 v-for，在解析 v-if，如果连用会把 v-if 添加到 v-for 遍历出的每个元素上，造成性能浪费
+解析时先解析 v-for，在解析 v-if，如果连用会把 v-if 添加到 v-for 遍历出的每个元素上，造成性能浪费
 
 11. v-model 实现原理及自定义 v-model
 
-  v-model 相当于`:value="value" @input="”`
+v-model 相当于`:value="value" @input="”`
 
 12. 组件 data 为什么是函数
 
-  调用组件时需要进行实例化操作，调用 data 函数返回一个对象作为组件数据源，保证多个组件数据互不影响；如果是对象，对象属于引用类型，会影响到其他组件实例
+调用组件时需要进行实例化操作，调用 data 函数返回一个对象作为组件数据源，保证多个组件数据互不影响；如果是对象，对象属于引用类型，会影响到其他组件实例
 
 13. Vue 组件通信
 
-  - propsDown 和 eventUp，父组件设置 props，子组件通过$emit 触发事件
-  - $parent,$children 获取当前组件父组件和子组件列表
-  - $attrs和$listeners
-  - 通过 provide 提供变量，子孙组件中通过 inject 注入变量
-  - $refs 获取实例
-  - eventBus 平级组件使用事件总线
-  - vuex 状态管理
+- propsDown 和 eventUp，父组件设置 props，子组件通过$emit 触发事件
+- $parent,$children 获取当前组件父组件和子组件列表
+- $attrs和$listeners
+- 通过 provide 提供变量，子孙组件中通过 inject 注入变量
+- $refs 获取实例
+- eventBus 平级组件使用事件总线
+- vuex 状态管理
 
 14. 为什么使用虚拟 DOM，并通过 vnode 来描述一个 DOM 解构
 
-  - virtual DOM 是用 js 对象来描述真实 DOM，是对 DOM 的抽象
-  - js 操作效率高，可以将 DOM 操作转换为对象操作，最终通过 diff 算法对比差异进行更新 DOM（减少对真实 DOM 的操作）
-  - 虚拟 DOM 不依赖真实平台环境从而实现跨平台
+- virtual DOM 是用 js 对象来描述真实 DOM，是对 DOM 的抽象
+- js 操作效率高，可以将 DOM 操作转换为对象操作，最终通过 diff 算法对比差异进行更新 DOM（减少对真实 DOM 的操作）
+- 虚拟 DOM 不依赖真实平台环境从而实现跨平台
 
-  **Vnode 描述 DOM**
-  虚拟 DOM 实现是普通对象包含 tag、data、children 等属性对真实节点的描述
+**Vnode 描述 DOM**
+虚拟 DOM 实现是普通对象包含 tag、data、children 等属性对真实节点的描述
 
-  ```js
-  {
-  chidlren: [VNode, Vnode],
-  context: {...},
-  data: {...},
-  tag: 'p',
-  ...
-  }
-  ```
+```js
+{
+chidlren: [VNode, Vnode],
+context: {...},
+data: {...},
+tag: 'p',
+...
+}
+```
 
 14. Vue 的 diff 算法
 
-  1. diff 算法是虚拟 dom 生成的必然产物，通过新旧 dom 比较，将变化的地方更新到真是的 dom 上，另外也需要 diff 的高效执行来降低意见复杂度
-  2. vue2.x 中为了降低 watcher 的粒度， 每一个组件都只有一个 watcher 与之对应，只有引入 diff 算法才能准确的找到发生变化的地方。
-  3. vue 中的 diff 的执行时刻是组件实例执行其更新函数时，他会对比上一次的俨然结果 oldVnodeh 和新的渲染结果 newVnode,此过程成为 patch.
-  4. diff 过程整体遵循 深度优先，同层比较。两个节点之间比较即根据它们是否拥有子节点或者文本节点做不同的操作，比较两组节点是 diff 的重点，首先假设头尾节点可能相同做 4 次节点比对尝试，如果找到相同的节点，按照通用方式遍历查找，查找结束才按情况处理剩下的节点，借助 key 通常可以非常精确的找到相同的节点，因此整个 patch 会很高效
+1. diff 算法是虚拟 dom 生成的必然产物，通过新旧 dom 比较，将变化的地方更新到真是的 dom 上，另外也需要 diff 的高效执行来降低意见复杂度
+1. vue2.x 中为了降低 watcher 的粒度， 每一个组件都只有一个 watcher 与之对应，只有引入 diff 算法才能准确的找到发生变化的地方。
+1. vue 中的 diff 的执行时刻是组件实例执行其更新函数时，他会对比上一次的俨然结果 oldVnodeh 和新的渲染结果 newVnode,此过程成为 patch.
+1. diff 过程整体遵循 深度优先，同层比较。两个节点之间比较即根据它们是否拥有子节点或者文本节点做不同的操作，比较两组节点是 diff 的重点，首先假设头尾节点可能相同做 4 次节点比对尝试，如果找到相同的节点，按照通用方式遍历查找，查找结束才按情况处理剩下的节点，借助 key 通常可以非常精确的找到相同的节点，因此整个 patch 会很高效
 
-15. key 的作用
+1. key 的作用
 
-  diff算法过程，会先进行新旧节点的首位交叉对比，当无法匹配时会用新节点的key与旧节点进行对比，从而找到响应旧节点
+diff 算法过程，会先进行新旧节点的首位交叉对比，当无法匹配时会用新节点的 key 与旧节点进行对比，从而找到响应旧节点
 
-  为了高效的更新虚拟 DOM，其原理是 vue 在 patch 过程中执行 patchVnode，patchVnode 过程中会执行 updateChildren 方法，更新新旧子元素，这个过程中通过 key 可以精准判断两个节点是否是同一个，如果没有 key 的话，永远都认为是一个相同节点，所以只能强制更新，不断触发更新操作，额外多做很多 DOM 操作，如果加 key 的话，从而避免频繁更新不同元素，使得整个 patch 过程更加高效，减少 DOM 操作量，提高性能
+为了高效的更新虚拟 DOM，其原理是 vue 在 patch 过程中执行 patchVnode，patchVnode 过程中会执行 updateChildren 方法，更新新旧子元素，这个过程中通过 key 可以精准判断两个节点是否是同一个，如果没有 key 的话，永远都认为是一个相同节点，所以只能强制更新，不断触发更新操作，额外多做很多 DOM 操作，如果加 key 的话，从而避免频繁更新不同元素，使得整个 patch 过程更加高效，减少 DOM 操作量，提高性能
 
-  vue 在使用相同标签名元素的过渡切换时，也会使用 key 属性，目的是为了让 vue 可以区分他们，否则 vue 只会替换其内部属性而不会触发过渡效果
+vue 在使用相同标签名元素的过渡切换时，也会使用 key 属性，目的是为了让 vue 可以区分他们，否则 vue 只会替换其内部属性而不会触发过渡效果
 
 16. 模板编译原理
 
-  Vue 中的模板编译是将 template 转换为 render 函数的过程，经历以下阶段
+Vue 中的模板编译是将 template 转换为 render 函数的过程，经历以下阶段
 
-  - 在 parseHtml 中将 template 模板语法转换为 AST 语法树
-    使用大量正则表达式对模板进行解析，遇到标签、文本时都会执行对应的钩子进行处理，是在 webpack 构建过程中使用 vue-loader 转换为 render 函数
-  - 标记静态节点 markUp
-    有一些数据首次渲染后不会再变化，对于的 DOM 也不会变化，此时需要深度遍历 AST 树，对静态节点和静态根节点进行标记，在重新 patch 时会跳过静态节点的比较
-  - 重新生成代码 codeGen
-    将优化后的 AST 语法树转换为可执行代码，通过 new Function()和 with 转为函数执行
+- 在 parseHtml 中将 template 模板语法转换为 AST 语法树
+  使用大量正则表达式对模板进行解析，遇到标签、文本时都会执行对应的钩子进行处理，是在 webpack 构建过程中使用 vue-loader 转换为 render 函数
+- 标记静态节点 markUp
+  有一些数据首次渲染后不会再变化，对于的 DOM 也不会变化，此时需要深度遍历 AST 树，对静态节点和静态根节点进行标记，在重新 patch 时会跳过静态节点的比较
+- 重新生成代码 codeGen
+  将优化后的 AST 语法树转换为可执行代码，通过 new Function()和 with 转为函数执行
 
-  Vue 渲染过程
-  - 调用compile函数，生成render函数字符串，编译过程如下
-  - parse函数解析template生成ASt抽象语法树
-  - optimize函数优化静态节点
-  - generate函数生成render函数字符串
-  - 调用new Watcher函数，监听数据的变化，当数据发生变化时，Render函数执行生成vnode对象
-  - 调用patch方法，对比新旧vnode对象，通过diff算法，更新DOM
+Vue 渲染过程
+
+- 调用 compile 函数，生成 render 函数字符串，编译过程如下
+- parse 函数解析 template 生成 ASt 抽象语法树
+- optimize 函数优化静态节点
+- generate 函数生成 render 函数字符串
+- 调用 new Watcher 函数，监听数据的变化，当数据发生变化时，Render 函数执行生成 vnode 对象
+- 调用 patch 方法，对比新旧 vnode 对象，通过 diff 算法，更新 DOM
 
 17. vue 常见性能优化
 
-  - 编码阶段
-    - 减少 data 中的数据，需要做响应式处理的数据添加到 data 中，因为 data 中的数据会添加 getter 和 setter，收集对应的 watcher
-    - v-if 和 v-for 不能连用
-    - 采用 keep-alive 缓存组件
-    - 使用路由懒加载、异步组件
-    - 防抖、节流
-    - 第三方模块按需引入
-    - 图片拦加载
-    - SEO 优化
-  - 打包阶段
-    - 压缩代码
-    - Tree Shaking/Scope Hoisting
-    - 使用cdn加载第三方模块
-    - 多线程打包happypack
-    - splitChunks抽离公共文件
-    - source Map优化
-  - 用户体验
-    - 骨架屏
-    - PWA
-    - Gzip压缩
+- 编码阶段
+  - 减少 data 中的数据，需要做响应式处理的数据添加到 data 中，因为 data 中的数据会添加 getter 和 setter，收集对应的 watcher
+  - v-if 和 v-for 不能连用
+  - 采用 keep-alive 缓存组件
+  - 使用路由懒加载、异步组件
+  - 防抖、节流
+  - 第三方模块按需引入
+  - 图片拦加载
+  - SEO 优化
+- 打包阶段
+  - 压缩代码
+  - Tree Shaking/Scope Hoisting
+  - 使用 cdn 加载第三方模块
+  - 多线程打包 happypack
+  - splitChunks 抽离公共文件
+  - source Map 优化
+- 用户体验
+  - 骨架屏
+  - PWA
+  - Gzip 压缩
 
 18. 为什么使用异步组件
 
-  如果组件功能多打包出的结果会变大，采用异步方式加载组件。使用import，异步组件会被分开打包，采用异步的方式加载组件，解决组件过大问题，如果不适用异步组件，组件功能较多时打包的结果就比较大
+如果组件功能多打包出的结果会变大，采用异步方式加载组件。使用 import，异步组件会被分开打包，采用异步的方式加载组件，解决组件过大问题，如果不适用异步组件，组件功能较多时打包的结果就比较大
 
-19. keep-alive理解
+19. keep-alive 理解
 
-  采用LRU算法（最近最久未使用法），如果数据最近被访问过,那么将来被访问的几率也更高
-  keep-alive 的实现正是用到了 LRU 策略,将最近访问的组件 push 到 this.keys 最后面,this.keys[0]也就是最久没被访问的组件,当缓存实例超过 max 设置值,删除 this.keys[0]
-  keep-alive实现组件缓存，当组件切换时不会组件进行卸载
-  两个属性：exclude任何匹配的组件都不会缓存，优先级高于include、include只有名称匹配的组件才缓存
-  生命周期：activated/deactivated
+采用 LRU 算法（最近最久未使用法），如果数据最近被访问过,那么将来被访问的几率也更高
+keep-alive 的实现正是用到了 LRU 策略,将最近访问的组件 push 到 this.keys 最后面,this.keys[0]也就是最久没被访问的组件,当缓存实例超过 max 设置值,删除 this.keys[0]
+keep-alive 实现组件缓存，当组件切换时不会组件进行卸载
+两个属性：exclude 任何匹配的组件都不会缓存，优先级高于 include、include 只有名称匹配的组件才缓存
+生命周期：activated/deactivated
 
-20. 实现hash和history路由
+20. 实现 hash 和 history 路由
 
-  单页应用使得页面可以在无刷新的条件下重新渲染，通过hash或history可以改变url，但不刷新页面，前端路由原理的核心之一
-  - hash
-    通过改变url的hash值实现无刷新效果，hash值改变不会导致页面刷新
-    如何监听hash变化？
-    hash变化时触发hashChange事件，监听hashChange事件，在监听事件回调函数中，执行展示和隐藏不同UI显示，从而实现前端路由
-    ```js
-    window.onhashchange = function (event) {
-      console.log(evebt)
-    }
-    ```
-  - history
-    采用History API中的pushState()和replaceState()方法对浏览器历史记录栈进行修改，压入栈或替换指定数据，虽然会改变当前页面URL，但是不会刷新页面，pushState会是History.length加1，而replaceState替换当前会话历史，不会增加History.length
-    ```js
-    window.history.pushState(stateObject, title, URL)
-    window.history.replaceState(stateObject, title, URL)
-    ```
-    如何监听路由变化？
-    通过popstate事件
-    ```js
-    window.addEventListener('popstate', function(event) {
-      console.log(event)
-    })
-    ```
+单页应用使得页面可以在无刷新的条件下重新渲染，通过 hash 或 history 可以改变 url，但不刷新页面，前端路由原理的核心之一
 
-21. vue-router中的导航守卫有哪些?
-
-  - 全局前置钩子beforeEach
-  - 全局解析守卫 beforeResolve
-  - 全局后置钩子 afterEach
-  - 路由独享守卫
-    - beforeEnter直接在路由配置上定义
-  - 组件内部守卫
-    - beforeRouteEnter 守卫执行前组件实例未被创建，不能使用this
-    - beforeRouteUpdate 路由改变，该组件被复用时调用
-    - beforeRouteLevel
-
-  - 完整的导航解析流程
-  1. 导航被处罚
-  2. 在失活的组件内调用beforeRouteLeel守卫
-  3. 调用全局beforeEach守卫
-  4. 再重用的组件中调用beforeRouteUpdate守卫
-  5. 在路由配置调用beforeEnter守卫
-  6. 解析异步路由组件
-  7. 在被激活的组件中调用beforeEnter守卫
-  8. 调用全局的beforeResolve
-  9. 导航被确认
-  10. 调用全局的afterEach钩子
-  11. 触发DOM更新
-  12. 调用beforeRouteEnter守卫中传给next的回调函数，创建好的组件实例会作为回调函数的参数传入
-
-22. 简述vuex工作原理
-
-  vuex中所有状态更新的唯一方式是提交mutation，异步操作通过action来提交mutation，这样使得可以方便的跟踪每一个状态的变化；如果mutation支持异步操作，就不知道状态时何时更新
-
-23. 为什么Vue3.0采用Proxy
-
-  vue2.x中使用递归和遍历data的方式实现数据的响应式处理，如果属性值也是对象，需要深度遍历，而且出于对性能考虑，vue2.x中对数组的处理是通过改写数组的方法从而实现数组的响应式处理，但对于数组的属性变化是检测不到的
-
-  - Proxy可以劫持整个对象，并返回一个新的对象
-  - 不仅可以代理对象，还可以代理数组
-  - 还可以代理动态增加的属性
-
-24. vue事件机制，手写EventEmitter
-
-  Vue 事件机制 本质上就是 一个 发布-订阅 模式的实现
+- hash
+  通过改变 url 的 hash 值实现无刷新效果，hash 值改变不会导致页面刷新
+  如何监听 hash 变化？
+  hash 变化时触发 hashChange 事件，监听 hashChange 事件，在监听事件回调函数中，执行展示和隐藏不同 UI 显示，从而实现前端路由
   ```js
-  class EventEmitter {
-    constructor () {
-      this.subs = Object.create(null)
-    }
-
-    $emit(eventType, ...data) {
-      if (this.subs[eventType].length)
-      this.subs[eventType].forEach(handler => {
-        handler(data)
-      })
-    }
-    $on (eventType, fn) {
-      this.subs[eventType] = this.subs[eventType] || []
-      this.subs[eventType].push(fn)
-    }
-    $off(eventType, handler) {
-      const index = this.subs[eventType].indexOf(handler)
-      this.subs[eventType].splice(index, 1)
-    }
+  window.onhashchange = function (event) {
+    console.log(evebt)
   }
   ```
+- history
+  采用 History API 中的 pushState()和 replaceState()方法对浏览器历史记录栈进行修改，压入栈或替换指定数据，虽然会改变当前页面 URL，但是不会刷新页面，pushState 会是 History.length 加 1，而 replaceState 替换当前会话历史，不会增加 History.length
+  ```js
+  window.history.pushState(stateObject, title, URL)
+  window.history.replaceState(stateObject, title, URL)
+  ```
+  如何监听路由变化？
+  通过 popstate 事件
+  ```js
+  window.addEventListener('popstate', function (event) {
+    console.log(event)
+  })
+  ```
+
+21. vue-router 中的导航守卫有哪些?
+
+- 全局前置钩子 beforeEach
+- 全局解析守卫 beforeResolve
+- 全局后置钩子 afterEach
+- 路由独享守卫
+  - beforeEnter 直接在路由配置上定义
+- 组件内部守卫
+
+  - beforeRouteEnter 守卫执行前组件实例未被创建，不能使用 this
+  - beforeRouteUpdate 路由改变，该组件被复用时调用
+  - beforeRouteLevel
+
+- 完整的导航解析流程
+
+1. 导航被处罚
+2. 在失活的组件内调用 beforeRouteLeel 守卫
+3. 调用全局 beforeEach 守卫
+4. 再重用的组件中调用 beforeRouteUpdate 守卫
+5. 在路由配置调用 beforeEnter 守卫
+6. 解析异步路由组件
+7. 在被激活的组件中调用 beforeEnter 守卫
+8. 调用全局的 beforeResolve
+9. 导航被确认
+10. 调用全局的 afterEach 钩子
+11. 触发 DOM 更新
+12. 调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入
+
+13. 简述 vuex 工作原理
+
+vuex 中所有状态更新的唯一方式是提交 mutation，异步操作通过 action 来提交 mutation，这样使得可以方便的跟踪每一个状态的变化；如果 mutation 支持异步操作，就不知道状态时何时更新
+
+23. 为什么 Vue3.0 采用 Proxy
+
+vue2.x 中使用递归和遍历 data 的方式实现数据的响应式处理，如果属性值也是对象，需要深度遍历，而且出于对性能考虑，vue2.x 中对数组的处理是通过改写数组的方法从而实现数组的响应式处理，但对于数组的属性变化是检测不到的
+
+- Proxy 可以劫持整个对象，并返回一个新的对象
+- 不仅可以代理对象，还可以代理数组
+- 还可以代理动态增加的属性
+
+24. vue 事件机制，手写 EventEmitter
+
+Vue 事件机制 本质上就是 一个 发布-订阅 模式的实现
+
+```js
+class EventEmitter {
+  constructor() {
+    this.subs = Object.create(null)
+  }
+
+  $emit(eventType, ...data) {
+    if (this.subs[eventType].length)
+      this.subs[eventType].forEach((handler) => {
+        handler(data)
+      })
+  }
+  $on(eventType, fn) {
+    this.subs[eventType] = this.subs[eventType] || []
+    this.subs[eventType].push(fn)
+  }
+  $off(eventType, handler) {
+    const index = this.subs[eventType].indexOf(handler)
+    this.subs[eventType].splice(index, 1)
+  }
+}
+```
 
 25. vue.set
 
-  当向data中定义的对象或数组，添加新的属性是不会更新视图的，此时就需要使用vue.set
-  ```js
-  export function set(target: Array<any> | Object, key: any, val: any): any {
-    // target为数组
-    if (Array.isArray(target) && isValidArrayIndex(key)) {
-      // 修改数组长度
-      target.length = Math.max(target.length, key)
-      target.splice(key, 1, val)
-      return val
-    }
-    // target为对象，key在target或target.prototype上，且不能在Object.prototype上
-    if (key in target && !(key in Object.prototype)) {
-      target[key] = val
-      return val
-    }
-    // 以上不成立 则开始给target创全新的属性
-    // 获取Observer实例
-    const ob = (target: any).__ob__
-    // target本身不是响应式数据直接赋值
-    if (!ob) {
-      target[key] = val
-      return val
-    }
-    // 进行响应式处理
-    defineReactive(ob.value, key, val)
-    ob.dep.notify()
+当向 data 中定义的对象或数组，添加新的属性是不会更新视图的，此时就需要使用 vue.set
+
+```js
+export function set(target: Array<any> | Object, key: any, val: any): any {
+  // target为数组
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
+    // 修改数组长度
+    target.length = Math.max(target.length, key)
+    target.splice(key, 1, val)
     return val
   }
-  ```
-  - 如果目标是数组，使用vue变异方法splice实现响应式
-  - 如果目标是对象，判断属性存在时并且是响应式，直接赋值
-  - 如果target本身就不是响应式也直接赋值
-  - 如果属性不是响应式，则调用defineREactive方法进行响应式处理
+  // target为对象，key在target或target.prototype上，且不能在Object.prototype上
+  if (key in target && !(key in Object.prototype)) {
+    target[key] = val
+    return val
+  }
+  // 以上不成立 则开始给target创全新的属性
+  // 获取Observer实例
+  const ob = (target: any).__ob__
+  // target本身不是响应式数据直接赋值
+  if (!ob) {
+    target[key] = val
+    return val
+  }
+  // 进行响应式处理
+  defineReactive(ob.value, key, val)
+  ob.dep.notify()
+  return val
+}
+```
 
-26. vue.use是做什么的，原理是什么
+- 如果目标是数组，使用 vue 变异方法 splice 实现响应式
+- 如果目标是对象，判断属性存在时并且是响应式，直接赋值
+- 如果 target 本身就不是响应式也直接赋值
+- 如果属性不是响应式，则调用 defineREactive 方法进行响应式处理
 
-  Vue.use()是用来使用插件的，可以在插件中扩展全局组件、指令和原型方法等
-  插件不依赖于vue本身，直接把vue作为参数传进去即可
-  每个插件都必须实现一个静态的install方法，当执行vue.use注册插件时，就会执行install方法，在install中的第一个参数就是vue对象，这样就不用通过import导入Vue
-  同一个插件调用多次只会被运行一次
+26. vue.use 是做什么的，原理是什么
 
-27. 组件中的name选项好处及作用
+Vue.use()是用来使用插件的，可以在插件中扩展全局组件、指令和原型方法等
+插件不依赖于 vue 本身，直接把 vue 作为参数传进去即可
+每个插件都必须实现一个静态的 install 方法，当执行 vue.use 注册插件时，就会执行 install 方法，在 install 中的第一个参数就是 vue 对象，这样就不用通过 import 导入 Vue
+同一个插件调用多次只会被运行一次
 
-  - 通过名字找对对应的组件
-  - 可以通过name属性实现缓存功能
-  - 可以通过name来识别组件
+27. 组件中的 name 选项好处及作用
 
-28. vue使用了那些设置模式
+- 通过名字找对对应的组件
+- 可以通过 name 属性实现缓存功能
+- 可以通过 name 来识别组件
 
-  - 工厂模式-传入参数即可创建实例（createElement）：根据传入的参数不同返回不同的实例
-  - 单例模式：单例模式整个程序有且皆有一个实例
-  - 发布订阅模式：事件机制    
-  - 观察者模式：watcher 和 dep的关系
+28. vue 使用了那些设置模式
+
+- 工厂模式-传入参数即可创建实例（createElement）：根据传入的参数不同返回不同的实例
+- 单例模式：单例模式整个程序有且皆有一个实例
+- 发布订阅模式：事件机制
+- 观察者模式：watcher 和 dep 的关系
 
 29. 怎么理解单向数据流
 
-  在vue中父组件通过prop将数据传递给子组件，子组件修改prop时会抛出错误
-  如果子组件想修改数据，需要通过#emit子组件派发事件，父组件接收事件进行更新
-
+在 vue 中父组件通过 prop 将数据传递给子组件，子组件修改 prop 时会抛出错误
+如果子组件想修改数据，需要通过#emit 子组件派发事件，父组件接收事件进行更新
 
 30. 自定义指令
 
-  - 分为全局注册和局部注册
-    ```js
-    Vue.directives('name', {})
+- 分为全局注册和局部注册
 
-    directive: {
-      name: ''
-    }
-    ```
-  - 自定义指令的钩子
-    - bind：指令第一次绑定到元素时使用，只执行一次
-    - inserted：被绑定元素，插入到父节点的DOM中时调用
-    - update：组件更新时调用
-    - componentUpdated：组件与子组件更新时调用
-    - unbind：指令与元素解绑时调用，只执行一次
-    除了update和componentUpdated，其余钩子都有el、binging、vnode三个参数
+  ```js
+  Vue.directives('name', {})
 
-​    案例：使用v-permission设置用户操作权限，对需要权限判断的DOM进行显示隐藏
+  directive: {
+    name: ''
+  }
+  ```
+
+- 自定义指令的钩子
+  - bind：指令第一次绑定到元素时使用，只执行一次
+  - inserted：被绑定元素，插入到父节点的 DOM 中时调用
+  - update：组件更新时调用
+  - componentUpdated：组件与子组件更新时调用
+  - unbind：指令与元素解绑时调用，只执行一次
+    除了 update 和 componentUpdated，其余钩子都有 el、binging、vnode 三个参数
+
+​ 案例：使用 v-permission 设置用户操作权限，对需要权限判断的 DOM 进行显示隐藏
 
 ```js
 function checkArray(key) {
-    const permissionList = ['add', 'delete', 'watch', 'update']
-    return permissionList.includes(key)
-  }
-  const permission = {
-    inserted (el, binding) {
-      let permission = binding.value // 获取到v-permission的值
-      if (permission) {
-        let hasPermission = checkArray(permission)
-        if (!hasPermission) {
-          // 没有权限 移除DOM元素
-          el.parentNode && el.parentNode.removeChild(el)
-        }
+  const permissionList = ['add', 'delete', 'watch', 'update']
+  return permissionList.includes(key)
+}
+const permission = {
+  inserted(el, binding) {
+    let permission = binding.value // 获取到v-permission的值
+    if (permission) {
+      let hasPermission = checkArray(permission)
+      if (!hasPermission) {
+        // 没有权限 移除DOM元素
+        el.parentNode && el.parentNode.removeChild(el)
       }
     }
-  }
-  export default permission
+  },
+}
+export default permission
 ```
 
-31. ajax、fetch和axios区别
+31. ajax、fetch 和 axios 区别
 
-  - ajax：页面无需重新加载整个网页的情况下，能够局部更新，Jquery的ajax在原生ajax上做了封装，缺点是回调嵌套不方便，如果使用JqueryAjax需要引入整个jquery
-  - fetch：ajax替代品，优点是：很好的解决回调地狱，基于Promise设计，缺点是IE浏览器完全不支持，可以通过第三方polyfill来支持
-  - axios：对原生XHR的封装，基于Promise，用于浏览器和nodejs，符合最新的ES规范
-    原生XHR几乎很少开发会用，JqueryAjax属于老当益壮的那种，虽然很老，但是很好用，Fetch是属于初生牛犊，还需要慢慢成长，axios就目前来说，算是非常好的了，无脑使用即可。
+- ajax：页面无需重新加载整个网页的情况下，能够局部更新，Jquery 的 ajax 在原生 ajax 上做了封装，缺点是回调嵌套不方便，如果使用 JqueryAjax 需要引入整个 jquery
+- fetch：ajax 替代品，优点是：很好的解决回调地狱，基于 Promise 设计，缺点是 IE 浏览器完全不支持，可以通过第三方 polyfill 来支持
+- axios：对原生 XHR 的封装，基于 Promise，用于浏览器和 nodejs，符合最新的 ES 规范
+  原生 XHR 几乎很少开发会用，JqueryAjax 属于老当益壮的那种，虽然很老，但是很好用，Fetch 是属于初生牛犊，还需要慢慢成长，axios 就目前来说，算是非常好的了，无脑使用即可。
