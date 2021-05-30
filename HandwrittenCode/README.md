@@ -75,6 +75,19 @@
   - 拖拽
 - 代码实现
 
+  ```js
+  function debounce(fn, delay) {
+    let timer = null
+    return function (...args) {
+      // 前一个定时任务未执行完，则 clear 掉定时任务，重新定时
+      timer && clearTimeout(timer)
+      timer = setTimout(() => {
+        fn.apply(this, ...args)
+      }, delay)
+    }
+  }
+  ```
+
 ##### 节流 throttle
 
 > 函数节流是短时间内大量触发同一时间，在函数执行一次之后，在指定的时间内不再被执行，直到过了这段时间才重新生效
@@ -86,6 +99,33 @@
   - 页面滚动
   - 窗口调整
 - 代码实现
+
+  ```js
+  function throttle(fn, delay) {
+    let lastTime = 0
+    return function (...args) {
+      const currentTime = new Date().getTime()
+      // 若时间差大于间隔时间，则立刻执行一次函数 并更新上一次执行时间
+      if (currentTime - lastTime > delay) {
+        fn.apply(this, ...args)
+        lastTime = currentTime
+      }
+    }
+  }
+
+  // 定时器版本
+  const throttle = (fn, delay) => {
+    let timer = null
+    return function (...args) {
+      if (!timer) {
+        timer = setTimout(() => {
+          timer = null
+          fn.apply(this, ...args)
+        })
+      }
+    }
+  }
+  ```
 
 [可视化工具](http://demo.nimius.net/debounce_throttle/)帮助理解
 
@@ -696,3 +736,6 @@ console.log(flatten(arr, 3)) // [1，2, 3, 4]
 ![数组扁平化处理](./images/数组扁平化处理.jpg)
 
 #### 手写 Promise
+
+#### 冒泡排序
+

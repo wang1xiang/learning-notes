@@ -10,21 +10,25 @@
         margin: 0;
         padding: 0;
       }
-      .wrapper {
-        display: table-cell;
-        text-align: center;
-        vertical-align: middle;
+      /* 表格布局 */
+      .wrap {
+        display: table;
+        width: 100%;
       }
-      .container {
-        width: 100px;
-        height: 100px;
-        background-color: #c30;
+      .left {
+        display: table-cell;
+        width: 200px;
+      }
+
+      .right {
+        display: table-cell;
       }
     </style>
   </head>
   <body>
-    <div class="wrapper">
-      <div class="container"></div>
+    <div class="wrap">
+      <div class="left"></div>
+      <div class="right"></div>
     </div>
   </body>
 </html>
