@@ -1,14 +1,15 @@
 1. 对 mvc 和 mvvm 的理解
 
-   mvc 时 Medel 负责数据存储，View 负责视图展示，Controller 负责业务逻辑，所有逻辑都在 controller 难以维护，当数据发生变化时需获取 dom，操作属性在重新渲染到视图
+   mvc 是 Model 负责数据存储，View 负责视图展示，Controller 负责业务逻辑，所有逻辑都在 controller 难以维护，当数据发生变化时需获取 dom，操作属性在重新渲染到视图
 
    mvvm 就是 Model、View、ViewModel，viewModel 实现一套响应式机制自动响应 model 中数据变化，并实现一套更新策略自动将数据变换转为视图更新，解决 Mode 和 View 的耦合问题，同时解决大量 DOM 操作问题
 
 2. 介绍响应式数据原理
+
    vue2.x 响应式数据核心是 Object.defineProperty，通过给 data 中的数据添加 getter 和 setter 变为响应式数据，当页面使用时，通过 Dep 类进行依赖收集（收集当前组件的 watcher），如果属性发生变化，通知对应依赖调用 update 方法进行更新
 
    - Observer：设置对象的 getter 和 setter，用于依赖收集和派发更新
-   - Dep：Dependency 依赖收集，收集房前响应式对象的依赖关系，每个响应式对象包括子对象都用于一个 Dep 实例（里面的 subs 是 Watcher 实例数组），当数据变更时，通过 dep.notify()通知每个 watcher
+   - Dep：Dependency 依赖收集，收集当前响应式对象的依赖关系，每个响应式对象包括子对象都用于一个 Dep 实例（里面的 subs 是 Watcher 实例数组），当数据变更时，通过 dep.notify()通知每个 watcher
    - Watcher：观察者对象，分为渲染 Warcher、计算属性 Watcher 和侦听器 Warcher
 
    vue3.x 使用 Proxy 代替 Object.defineProperty，Proxy 可以直接监听对象和数组的变化，并且有多达 13 中拦截方法
@@ -224,7 +225,7 @@ diff 算法过程，会先进行新旧节点的首位交叉对比，当无法匹
 
 vue 在使用相同标签名元素的过渡切换时，也会使用 key 属性，目的是为了让 vue 可以区分他们，否则 vue 只会替换其内部属性而不会触发过渡效果
 
-16. 模板编译原理
+16. 模板编译原理-
 
 Vue 中的模板编译是将 template 转换为 render 函数的过程，经历以下阶段
 
@@ -321,24 +322,29 @@ keep-alive 实现组件缓存，当组件切换时不会组件进行卸载
 
 - 完整的导航解析流程
 
-1. 导航被处罚
-2. 在失活的组件内调用 beforeRouteLeel 守卫
-3. 调用全局 beforeEach 守卫
-4. 再重用的组件中调用 beforeRouteUpdate 守卫
-5. 在路由配置调用 beforeEnter 守卫
-6. 解析异步路由组件
-7. 在被激活的组件中调用 beforeEnter 守卫
-8. 调用全局的 beforeResolve
-9. 导航被确认
-10. 调用全局的 afterEach 钩子
-11. 触发 DOM 更新
-12. 调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入
+  1. 导航被处罚
+  2. 在失活的组件内调用 beforeRouteLeel 守卫
+  3. 调用全局 beforeEach 守卫
+  4. 再重用的组件中调用 beforeRouteUpdate 守卫
+  5. 在路由配置调用 beforeEnter 守卫
+  6. 解析异步路由组件
+  7. 在被激活的组件中调用 beforeEnter 守卫
+  8. 调用全局的 beforeResolve
+  9. 导航被确认
+  10. 调用全局的 afterEach 钩子
+  11. 触发 DOM 更新
+  12. 调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入
 
-13. 简述 vuex 工作原理
+23. 简述 vuex 工作原理
 
-vuex 中所有状态更新的唯一方式是提交 mutation，异步操作通过 action 来提交 mutation，这样使得可以方便的跟踪每一个状态的变化；如果 mutation 支持异步操作，就不知道状态时何时更新
+    vuex 中所有状态更新的唯一方式是提交 mutation，异步操作通过 action 来提交 mutation，这样使得可以方便的跟踪每一个状态的变化；如果 mutation 支持异步操作，就不知道状态时何时更新
 
-23. 为什么 Vue3.0 采用 Proxy
+24. mixin 执行顺序
+    同名生命周期：同名钩子会合并为一个数组，都会被调用，混入对象的钩子将在组件自身钩子之前调用
+    同名数据或方法：合并，数据对象在内部递归合并，发生冲突时以组件数据优先
+    值为对象的选项，例如 methods、components 和 directives，将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。
+
+25. 为什么 Vue3.0 采用 Proxy
 
 vue2.x 中使用递归和遍历 data 的方式实现数据的响应式处理，如果属性值也是对象，需要深度遍历，而且出于对性能考虑，vue2.x 中对数组的处理是通过改写数组的方法从而实现数组的响应式处理，但对于数组的属性变化是检测不到的
 
@@ -456,7 +462,7 @@ Vue.use()是用来使用插件的，可以在插件中扩展全局组件、指�
   - unbind：指令与元素解绑时调用，只执行一次
     除了 update 和 componentUpdated，其余钩子都有 el、binging、vnode 三个参数
 
-​ 案例：使用 v-permission 设置用户操作权限，对需要权限判断的 DOM 进行显示隐藏
+案例：使用 v-permission 设置用户操作权限，对需要权限判断的 DOM 进行显示隐藏
 
 ```js
 function checkArray(key) {
@@ -484,3 +490,9 @@ export default permission
 - fetch：ajax 替代品，优点是：很好的解决回调地狱，基于 Promise 设计，缺点是 IE 浏览器完全不支持，可以通过第三方 polyfill 来支持
 - axios：对原生 XHR 的封装，基于 Promise，用于浏览器和 nodejs，符合最新的 ES 规范
   原生 XHR 几乎很少开发会用，JqueryAjax 属于老当益壮的那种，虽然很老，但是很好用，Fetch 是属于初生牛犊，还需要慢慢成长，axios 就目前来说，算是非常好的了，无脑使用即可。
+
+32. vue 处理大数据量
+1. 添加加载动画，优化用户体验
+1. 利用服务器渲染 SSR，在服务端渲染组件
+1. 避免浏览器处理大量的 dom，比如懒加载，异步渲染组件，使用分页
+1. 对于固定的非响应式的数据，使用 Object.freeze 冻结
