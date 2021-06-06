@@ -134,19 +134,6 @@
 - 当文档挂载过程遇到 js 文件，html 文档会挂起渲染的线程，等待 js 文件加载完毕并解析执行完成，才可以恢复 html 文档的渲染线程（JS 可能会修改 DOM，意味着，在 js 执行完成前，后续所有资源加载可能时没有必要的，这是 js 阻塞后续资源下载的根本原因，所以 js 会放在文档末尾）
 - JS 的解析有浏览器的 js 引擎完成，例如 v8 引擎
 
-#### 常见 web 安全及防护原理
-
-- sql 注入原理：将 sql 插入到 web 表单提交或输入域名或页面请求的查询字符串，最终达到欺骗服务器进行恶意的 SQL 命令
-- xss 原理及规范：跨站脚本（cross-site scripting）攻击指攻击者往 web 页面插入恶意 html 标签或 javascript 代码，使用户访问都会执行相应的嵌入代码，从而获取用户资料等。比如：攻击者在论坛中放一个看似安全的链接，骗取用户点击后，窃取`cookie`中的用户私密信息；或者攻击者在论坛中加一个恶意表单，当用户提交表单的时候，却把信息传送到攻击者的服务器中，而不是用户原本以为的信任站点
-  CSP 内容安全策略：建立白名单，告诉浏览器哪些外部资源可以加载和执行，只需要配置规则，如何拦截是浏览器自己实现的
-  - 设置 heep header 中的 Content-Security-Policy: default-src 'self' img-src child-src
-  - 设置 meta 标签 http-equiv="content-Securoty-Policy"
-- csrf 原理：跨站请求伪造（cross-site reqiest forgery），挟制用户在当前已登录的 web 应用程序上执行非本意的操作的攻击方法。就是说冒充用户发起请求，完成一些违背用户意愿的请求
-  - 添加 TOKEN 验证
-  - 在 HTTP 头部添加令牌信息
-  - 阻止第三方网站请求接口
-- `XSS`是获取信息，不需要提前知道其他用户页面的代码和数据包。`CSRF`是代替用户完成指定的动作，需要知道其他用户页面的代码和数据包
-
 #### 说一下强制缓存和协商缓存
 
 > 缓存指在本地磁盘中对访问过的资源保存的副本文件
@@ -201,3 +188,216 @@
 - 懒加载：主要目的是作为服务器前端的优化，减少请求次数或延迟请求
 - 行为相反，一个是提前加载，一个是迟缓甚至不加载
 - 懒加载对服务器有一定的缓解压力作用，而预加载会增加服务器前端压力
+- 图片的加载是由 src 的值引起的,当对 src 赋值时浏览器回请求国片资源,基于这个。可以利用 html5 的特性 data-xxx 保存图片的路经,当我们需要加载图片的时候才将 data-xxx 的值赋予 src，就能实现图片的按需加载。也就是懒加载
+
+#### 常见 web 安全及防护原理
+
+- sql 注入原理：将 sql 插入到 web 表单提交或输入域名或页面请求的查询字符串，最终达到欺骗服务器进行恶意的 SQL 命令
+- xss 原理及规范：跨站脚本（cross-site scripting）攻击指攻击者往 web 页面插入恶意 html 标签或 javascript 代码，使用户访问都会执行相应的嵌入代码，从而获取用户资料等。比如：攻击者在论坛中放一个看似安全的链接，骗取用户点击后，窃取`cookie`中的用户私密信息；或者攻击者在论坛中加一个恶意表单，当用户提交表单的时候，却把信息传送到攻击者的服务器中，而不是用户原本以为的信任站点
+
+  防御措施：
+
+  1. 输入过滤：只要有输入的地方，就存在 xss 攻击 1.攻击者提交恶意代码（前后台都需要做过滤检查或转码），2.浏览器执行恶意代码
+  2. 利用 CSP 内容安全策略：建立白名单，告诉浏览器哪些外部资源可以加载和执行，只需要配置规则，如何拦截是浏览器自己实现的
+
+  - 设置 heep header 中的 Content-Security-Policy: default-src 'self' img-src child-src
+  - 设置 meta 标签 http-equiv="content-Securoty-Policy"
+
+  3. cookie 的 HttpOnly 禁止 js 读取 Cookie 信息
+  4. 通过验证码方法验证用户提交
+
+  如果还有的话，像限制用户输入长度，因为 js 脚本一般都是比较长的
+
+- csrf 原理：跨站请求伪造（cross-site request forgery），挟制用户在当前已登录的 web 应用程序上执行非本意的操作的攻击方法。就是说冒充用户发起请求，完成一些违背用户意愿的请求，与 xss 不同的是，xss 是攻击者直接对我们的网站 A 进行注入攻击，而 CSRF 是通过网站 B 对网站 A 进行滚伪造请求；例如，在购物网站 A 点击一个恶意链接 B，B 请求网站 A 下的下单接口，结果在 A 网站就真的会生成一个订单；原理是：网站 B 通过表单、get 请求来伪造网站 A 的请求，这时候请求会带上网站 A 的 cookie，若登陆信息保存在 cooklie 中，就实现了伪造攻击
+
+  - 验证 csrf token，目前相对成熟的方案
+
+    服务端随机生成 token，保存在服务端 session 中，同时保存到客户端中，客户端发送请求时，把 token 带到 HTTP 请求头或参数中，服务端接收到请求，验证请求中的 token 与 session 中的是否一致。
+    token 可以在登录时写入到 cookies 中，发送请求时，js 读取 cookies 中的 token，并设置到 HTTP 请求头中。
+
+  - 针对伪造请求的域名不是网站 A，限制 cookie 中的 sameSite 属性为 strict，只有同源网站的请求才会带上 cookie
+
+  - 更换登录态方案
+
+    由于 CSRF 本质是伪造请求携带了保存在 cookie 中的信息，所以对 session 机制的登录态比较不利，可以使用 JWT（JSON WEB TOken）方案，其 token 信息一般设置到 HTTP 请求头中，所以可以预防 CSRF 攻击
+
+- `XSS`是获取信息，不需要提前知道其他用户页面的代码和数据包。`CSRF`是代替用户完成指定的动作，需要知道其他用户页面的代码和数据包
+- TOKEN 可能被窃取，可以通过 XSS 攻击这种方式去窃取，可以结合一些其他的手段，预防 xss 攻击
+- referer 字段
+- vue 中的 xss 防御
+  vue 框架已经进行了一些 xss 防御，对于一些外来的内容（例如接口或 url 参数），尽量用{{}}表达式显示（{{{}}}表示不经转义直接输出），因为{{}}中的内容进行了字符串化，浏览器不会对其中的内容进行执行操作；尽量避免 v-html 指令，或者先对内容进行 xss 过滤
+
+#### cookie 面试题
+
+> 由于 HTTP 是无状态协议，无状态指的是服务端对于客户端每次发送的请求都会认为是新的一个请求，上一次会话和下一次会话没有联系。但是很多场景需要直到上次会话和下一次会话的关系（比如登陆之后记住登陆状态），这时就引入和 cookie 和 session 体系。
+
+- cookie
+  客户端请求服务器时，如果服务器需要记录该用户状态，就通过 response Headers 像客户端浏览器颁发一个 cookie，而客户端浏览器会把 cookie 保存起来，当浏览器在请求服务器时，浏览器把请求的网址连同该 cookie 一同提交给服务器，服务器通过检查该 cookie 来获取用户状态
+- session
+  当服务器接收请求时，就从存储在服务器上的无数 session 信息中去查找客户端请求时带过来的 cookie 的状态，如果服务器中没有这条 session 信息则添加一条 session 信息
+  通常 cookie 中存的是 session 信息经过计算后的唯一 id sessionid
+
+##### cookie 时如何工作的
+
+- request
+
+  当浏览器发送一个请求时，浏览器回自动检查是否有相应的 cookie，如果有则将 cookie 添加到 Request Headers 的 Cookie 字段中（cookie 字段是很多 name=value 以分号分隔的字符串）
+
+- response
+
+  当服务端需要种 cookie 时，在 http 请求的 Response Headers 中添加 Set-Cookie 字段，浏览器接收之后会自动解析识别，将 cookie 保存起来
+
+  ```
+  Set-Cookle:_ _hsid_t=3eac583831cb5952_t;Path=/;Domain=360.com; Max-Age=86400
+  ```
+
+````
+
+##### cookie 和 session 的区别
+
+- 存储位置不同
+
+  cookie 存储在客户浏览器上，而 session 数据保存在服务器上
+
+- 存储大小不同
+
+  一般单个 cookie 保存的数据不能超过 4 个，单个域名最多保存 20 个 cookie；session 则无大小和限制
+
+##### cookie 属性
+
+- Name：cookie 名
+- Value：cookie 值
+- Domain：cookie 的域名。如果设置.example.com，那么子域名 a.example.com 和 b.example.com，都可以使用.example.com 的 cookie，反之则不行
+- Path：允许读取 cookie 的 url 路径，一般设置为/
+- Expires：cookie 过期时间。不设置，则为 session 会话期，页面退出时 cookie 失效
+- HttpOnly：设置为 true 时，只有 http 能读取，js 只能读取未设置 HttpOnly 的 cookie
+- Secure：标记为 Secure 的 cookie，只有 https 的请求可以携带
+- SameSite：限制第三方 url 是否可以携带 cookie
+  - Strict：仅允许同站点请求的 cookie
+  - Lax：允许部分第三方请求携带 cookie，即导航到目标网址的 get 请求，包括超链接，预加载和 get 表单三种形式发送 cookie
+  - None：任意发送 cookie，需要设置 Secure，网站必须采用 https
+- Priority：优先级
+
+##### 操作 cookie，js 和服务端
+
+当设置了 HttpOnly 为 true 时，只有 http 请求读取，不能被 js 读取，具体表现为 document.cookie 读取到的值不包含设置的 HttpOnly
+
+js 操作 cookie 使用 document.cookie
+
+- 读取
+  document.cookie 读取到字符串，包含 cookie 的 name 和 value，需要解析
+- 写入
+  ```js
+  document.cookie =
+    'uid=123;expires=Mon Jan 04 2022 17:42:40 GMT;path=/;secure;'
+  document.cookie =
+    'uid=123;expires=Mon Jan 04 2022 17:42:40 GMT;path=/caikuai;domain=edu.360.cn;secure;samesite=lax'
+````
+
+一次只能写入一个 cookie
+
+- 删除
+
+  只需要将一个已经存在的 cookie 名字过期时间设置为过去时间即可
+
+  ```js
+  document.cookie = 'uid=123;expires=' + new Date(0) + ';path=/;secure;'
+  ```
+
+- 修改
+  重新赋值，要保证 path 和 domain 两个值不变，否则会添加新的 cookie
+  ```js
+  document.cookie =
+    'uid=123;expires=Mon Jan 04 2082 17:42:40 GMT;path=/;secure;'
+  ```
+
+##### 服务器端如何读写 cookie
+
+- 写 cookie
+
+  ```js
+  res.setHeader('Set-Cookie', ['uid=123;maxAge: 900000; httpOnly: true'])
+  // 或者
+  res.cookie('uid', '123', { maxAge: 900000, httpOnly: true })
+  ```
+
+- 读取 cookie
+
+  ```js
+  console.log(req.getHeader('Cookie')) // 拿到所有cookie
+  // 或者
+  console.log(req.cookie.name)
+  ```
+
+##### 查看浏览器是否打开 Cookie 功能
+
+```js
+window.navigator.cookieEnabled // true
+```
+
+##### cookie 的共享策略是什么
+
+domain 和 path 共同决定 cookie 可以被哪些 url 访问
+访问一个 url 时，如果 url 的 host 和 domain 一致或者时 domain 的子域名，并且 url 的路径和 path 部分匹配，那么 cookie 才可以被获取
+
+##### cookie 的编码
+
+```js
+document.cookie =
+  'uid=123;expires=Mon Jan 04 2022 17:42:40 GMT;path=/caikuai;domain=edu.360.cn;secure;samesite=lax'
+```
+
+cookie 一般包含等号、冒号、分号、空格、逗号、斜杠等特殊字符，需要对其进行编码，使用 encodeURIComponent/decodeURIComponent 操作
+
+不使用 escape 和 encodeURI 的原因是，encodeURIComponent 可以将更多字符进行编码，比如‘/’
+
+##### cookie 应对 xss 漏洞
+
+xss 漏洞原理是：由于未对用户提交的表单数据或者 url 参数等数据做处理就显示在页面上，导致用户提交的内容在页面上被作为 html 解析执行
+
+常规方案：对特殊字符进行滚处理，如对“<”或“>“进行转义
+
+cookie 设置：对用用户利用 script 脚本采集 cookie 信息，可以将重要的 cookie 信息设置为 HttpOnly 来避免 cookie 被 js 采集
+
+##### cookie 应对 csrf 攻击
+
+跨站请求伪造原理：用户登陆 A 网站，然后因为某些原理访问 B 网站（比如跳转），B 网站直接发送一个 A 网站的请求进行一些危险操作，由于 A 网站处理登陆状态，就发生了 CSRF 攻击，核心是利用了 cookie 信息可以被跨站携带
+
+常规方案：采用验证码或 token 等
+
+cookie 设置：由于 CSRF 攻击核心是利用 cookie 信息可以被跨站携带，可以对核心 cookie 的 SameSite 设置为 Strict 或 Lax 来避免
+
+##### 不同浏览器共享 cookie 吗
+
+不共享，是对立的 cookie
+
+#### web 端 cookie 的设置和获取
+
+```js
+//写cookie
+function setCookie(name, value) {
+  var Days = 30
+  var exp = new Date()
+  exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000)
+  document.cookie = name + '=' + escape(value) + ';expires=' + exp.toGMTString()
+}
+//读取cookie
+function getCookie(name) {
+  var arr,
+    reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
+  if ((arr = document.cookie.match(reg))) {
+    return unescape(arr[2])
+  } else {
+    return null
+  }
+}
+//删除cookie
+function delCookie(name) {
+  var exp = new Date()
+  exp.setTime(exp.getTime() - 1)
+  var cval = getCookie(name)
+  if (cval != null) {
+    document.cookie = name + '=' + cval + ';expires=' + exp.toGMTString()
+  }
+}
+```

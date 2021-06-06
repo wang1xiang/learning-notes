@@ -62,6 +62,37 @@
 - 标准盒子 W3C 盒子模型 一个块的宽度 = width + margin + padding + border
 - 怪异盒子 IE 盒子模型 浏览器 width 属性不是内容的宽度，而是内容、内边距、和边框的宽度总和 一个块的宽度 = width + margin IE9 以下触发
 
+```html
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  /* 没有box-sizing属性时child宽度为100px 加上box-sizing属性时宽度为70px */
+  .parent {
+    height: 100px;
+    width: 100px;
+    padding-left: 10px;
+    padding-right: 20px;
+    margin: 10px 15px;
+    height: 50px;
+    box-sizing: border-box;
+    background-color: tomato;
+  }
+  .child {
+    width: 100%;
+    height: 100px;
+    background-color: aqua;
+  }
+</style>
+</head>
+<body>
+<div class="parent">
+  <div class="child"></div>
+</div>
+</body>
+```
+
 #### CSS3 新增伪类
 
 - 伪类是为了弥补常规 CSS 选择器的不足，以便获取到更多信息
@@ -174,6 +205,11 @@
 - 在 css 盒式模型中，inline 盒式模型将不支持对 margin, width, height, max/min-width/height 等属性的垂直响应，而 block 盒式模型则支持。
 
 - inline-block 将会使元素成为一个 inline 元素（如后跟内联元素，将不会换行），但本身却扔支持 block 元素的属性。
+
+#### inline 和 block 区别
+
+- inline：1.行内不换行 2.行内元素不可以设置大小 3.大小由内容决定
+- block：1.独立成行 2.可设置大小 3.宽度继承父类的宽度
 
 #### 行内元素 float:left 后是否变为块级元素？
 

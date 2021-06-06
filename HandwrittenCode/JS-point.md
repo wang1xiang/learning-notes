@@ -270,37 +270,6 @@ markyun.Event = {
 
   创建 script 标签，插入到 DOM 中，加载完毕后 callback
 
-#### web 端 cookie 的设置和获取
-
-```js
-//写cookie
-function setCookie(name, value) {
-  var Days = 30
-  var exp = new Date()
-  exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000)
-  document.cookie = name + '=' + escape(value) + ';expires=' + exp.toGMTString()
-}
-//读取cookie
-function getCookie(name) {
-  var arr,
-    reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
-  if ((arr = document.cookie.match(reg))) {
-    return unescape(arr[2])
-  } else {
-    return null
-  }
-}
-//删除cookie
-function delCookie(name) {
-  var exp = new Date()
-  exp.setTime(exp.getTime() - 1)
-  var cval = getCookie(name)
-  if (cval != null) {
-    document.cookie = name + '=' + cval + ';expires=' + exp.toGMTString()
-  }
-}
-```
-
 #### AMD 和 DommonJS 的理解
 
 - CommonJS 是服务端模块规范，Node 采用这种规范，它加载模块是同步的，就是说只有加载完成才会执行后面的操作。AMD 规范则是异步加载模块，允许指定回调函数
@@ -312,6 +281,21 @@ function delCookie(name) {
 - 不可以当作构造函数，也就是说，不可以使用 new 命令，否则会抛出一个错误
 - 不可以使用 arguments 对象，该对象在函数体内不存在。如果要用，可以用 Rest 参数代替
 - 不可以使用 yield 命令，因此箭头函数不能用作 Generator 函数
+
+#### Promise 防止某一个 promise 失败而导致整个 promise 失败
+
+- 使用 Promise.allSettled
+  Promise.allSettled 是对 Promise.all 的一种补充，缓解了 Promise.all 碰到 reject 的痛点问题
+
+  ```js
+  const delay = (n) => new Promise((resolve) => setTimeout(resolve, n))
+
+  const promises = [delay(100).then(() => 1), delay(200).then(() => 2)]
+
+  Promise.all(promises).then((values) => console.log(values))
+  ```
+
+- 每个 promise 捕获异常
 
 #### async/await 捕获异常
 
