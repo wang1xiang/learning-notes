@@ -1,0 +1,17 @@
+name: Merge branch with labeled
+on:
+  push:
+    branches:
+      - master
+jobs:
+  merge-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Merge by labeled
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          label_name: 'merged in gh-pages'
+          target_branch: 'gh-pages'
+          github_token: ${{ github.ACCESS_TOKEN }}
