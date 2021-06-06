@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Merge master -> gh-pages
+      - name: Merge branch
         uses: devmasx/merge-branch@v1.3.1
         with:
           type: now
