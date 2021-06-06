@@ -1,18 +1,17 @@
-name: Merge branch master to gh-pages
+name: Merge branch to uat
 on:
   push:
     branches:
-      - master
+      - '*'
 jobs:
   merge-branch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
 
-      - name: Merge branch
+      - name: Merge staging -> uat
         uses: devmasx/merge-branch@v1.3.1
         with:
           type: now
-          from_branch: master
-          target_branch: gh-pages
+          target_branch: uat
           github_token: ${{ github.ACCESS_TOKEN }}
