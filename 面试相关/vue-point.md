@@ -51,26 +51,26 @@
    vue 多次更新数据，最终会进行批处理更新。内部就是调用 nextTick 实现延迟更新
 
    ```js
-   let cbs = []
-   let pendings = false
+   let cbs = [];
+   let pendings = false;
    function flushCallbacks() {
-     cbs.forEach((fn) => fn())
-     pendings = false
+     cbs.forEach((fn) => fn());
+     pendings = false;
    }
    function nextTick(fn) {
-     cbs.push(fn)
+     cbs.push(fn);
      if (!peddings) {
-       peddings = true
-       Promise.resolve().then(flushCallbacks)
+       peddings = true;
+       Promise.resolve().then(flushCallbacks);
      }
    }
    function render() {
-     console.log('渲染')
+     console.log("渲染");
    }
 
-   nextTick(render)
-   nextTick(render)
-   nextTick(render)
+   nextTick(render);
+   nextTick(render);
+   nextTick(render);
    ```
 
 7. vue 生命周期
@@ -134,34 +134,34 @@
 
 ```js
 function _traverse(val: any, seen: SimpleSet) {
-  let i, keys
-  const isA = Array.isArray(val)
+  let i, keys;
+  const isA = Array.isArray(val);
   // 如果不是Array和Object 或被冻结时直接返回
   if (
     (!isA && !isObject(val)) ||
     Object.isFrozen(val) ||
     val instanceof VNode
   ) {
-    return
+    return;
   }
   // 拿到dep.id保证不会重复收集依赖
   if (val.__ob__) {
-    const depId = val.__ob__.dep.id
+    const depId = val.__ob__.dep.id;
     if (seen.has(depId)) {
-      return
+      return;
     }
-    seen.add(depId)
+    seen.add(depId);
   }
   // 数组循环递归调用_traverse
   if (isA) {
-    i = val.length
-    while (i--) _traverse(val[i], seen)
+    i = val.length;
+    while (i--) _traverse(val[i], seen);
   } else {
     // 对象遍历所有key 执行一次读取操作，在递归子值
-    keys = Object.keys(val)
-    i = keys.length
+    keys = Object.keys(val);
+    i = keys.length;
     // val[keys[i]]触发依赖收集操作
-    while (i--) _traverse(val[keys[i]], seen)
+    while (i--) _traverse(val[keys[i]], seen);
   }
 }
 ```
@@ -350,21 +350,21 @@ keep-alive 实现组件缓存，当组件切换时不会组件进行卸载
   hash 变化时触发 hashChange 事件，监听 hashChange 事件，在监听事件回调函数中，执行展示和隐藏不同 UI 显示，从而实现前端路由
   ```js
   window.onhashchange = function (event) {
-    console.log(evebt)
-  }
+    console.log(evebt);
+  };
   ```
 - history
   采用 History API 中的 pushState()和 replaceState()方法对浏览器历史记录栈进行修改，压入栈或替换指定数据，虽然会改变当前页面 URL，但是不会刷新页面，pushState 会是 History.length 加 1，而 replaceState 替换当前会话历史，不会增加 History.length
   ```js
-  window.history.pushState(stateObject, title, URL)
-  window.history.replaceState(stateObject, title, URL)
+  window.history.pushState(stateObject, title, URL);
+  window.history.replaceState(stateObject, title, URL);
   ```
   如何监听路由变化？
   通过 popstate 事件
   ```js
-  window.addEventListener('popstate', function (event) {
-    console.log(event)
-  })
+  window.addEventListener("popstate", function (event) {
+    console.log(event);
+  });
   ```
 
 21. vue-router 中的导航守卫有哪些?
@@ -439,22 +439,22 @@ Vue 事件机制 本质上就是 一个 发布-订阅 模式的实现
 ```js
 class EventEmitter {
   constructor() {
-    this.subs = Object.create(null)
+    this.subs = Object.create(null);
   }
 
   $emit(eventType, ...data) {
     if (this.subs[eventType].length)
       this.subs[eventType].forEach((handler) => {
-        handler(data)
-      })
+        handler(data);
+      });
   }
   $on(eventType, fn) {
-    this.subs[eventType] = this.subs[eventType] || []
-    this.subs[eventType].push(fn)
+    this.subs[eventType] = this.subs[eventType] || [];
+    this.subs[eventType].push(fn);
   }
   $off(eventType, handler) {
-    const index = this.subs[eventType].indexOf(handler)
-    this.subs[eventType].splice(index, 1)
+    const index = this.subs[eventType].indexOf(handler);
+    this.subs[eventType].splice(index, 1);
   }
 }
 ```
@@ -468,27 +468,27 @@ export function set(target: Array<any> | Object, key: any, val: any): any {
   // target为数组
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     // 修改数组长度
-    target.length = Math.max(target.length, key)
-    target.splice(key, 1, val)
-    return val
+    target.length = Math.max(target.length, key);
+    target.splice(key, 1, val);
+    return val;
   }
   // target为对象，key在target或target.prototype上，且不能在Object.prototype上
   if (key in target && !(key in Object.prototype)) {
-    target[key] = val
-    return val
+    target[key] = val;
+    return val;
   }
   // 以上不成立 则开始给target创全新的属性
   // 获取Observer实例
-  const ob = (target: any).__ob__
+  const ob = (target: any).__ob__;
   // target本身不是响应式数据直接赋值
   if (!ob) {
-    target[key] = val
-    return val
+    target[key] = val;
+    return val;
   }
   // 进行响应式处理
-  defineReactive(ob.value, key, val)
-  ob.dep.notify()
-  return val
+  defineReactive(ob.value, key, val);
+  ob.dep.notify();
+  return val;
 }
 ```
 
@@ -527,10 +527,10 @@ Vue.use()是用来使用插件的，可以在插件中扩展全局组件、指�
 - 分为全局注册和局部注册
 
   ```js
-  Vue.directives('name', {})
+  Vue.directives("name", {});
 
   directive: {
-    name: ''
+    name: "";
   }
   ```
 
@@ -546,22 +546,22 @@ Vue.use()是用来使用插件的，可以在插件中扩展全局组件、指�
 
 ```js
 function checkArray(key) {
-  const permissionList = ['add', 'delete', 'watch', 'update']
-  return permissionList.includes(key)
+  const permissionList = ["add", "delete", "watch", "update"];
+  return permissionList.includes(key);
 }
 const permission = {
   inserted(el, binding) {
-    let permission = binding.value // 获取到v-permission的值
+    let permission = binding.value; // 获取到v-permission的值
     if (permission) {
-      let hasPermission = checkArray(permission)
+      let hasPermission = checkArray(permission);
       if (!hasPermission) {
         // 没有权限 移除DOM元素
-        el.parentNode && el.parentNode.removeChild(el)
+        el.parentNode && el.parentNode.removeChild(el);
       }
     }
   },
-}
-export default permission
+};
+export default permission;
 ```
 
 31. ajax、fetch 和 axios 区别

@@ -34,7 +34,7 @@ var obj = {
     printName()
   },
 }
-obj.getName() // undefined
+obj.getName() // 123
 
 setTimeout(() => {
   console.log('1')
@@ -141,13 +141,16 @@ var b = f2(3)
 console.log(b)
 
 /**
- * a = b = 3
+ * var a = b = 3
+ * 相当于
+ * b = 3 // 此时b为全局变量
+ * var a = b
  */
 (function () {
   var a = b = 3  
 })()
-console.log(a)
-console.log(b)
+console.log(b) // 3
+console.log(a) // a is not undefined
 
 /**
  * 
