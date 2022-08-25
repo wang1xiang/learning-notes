@@ -1,3 +1,13 @@
+#### 技巧
+
+平时经常逛掘金，再掘金上看到这种实现方式，所以记录下来
+
+我看了 element 源码都是 border-box 这样做的
+
+#### CSS3 新特性
+
+- 常规 动画 盒子模型 响应式布局
+
 #### 谈一谈你对 BFC/IFC 的理解
 
 > BFC 全称 Block Formatting Context，即块级格式化上下文，是为盒子准备的一套渲染规则
@@ -115,7 +125,7 @@
 
   ```css
   .cf:after {
-    content: ' ';
+    content: " ";
     display: block;
     overflow: hidden;
     height: 0;

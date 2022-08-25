@@ -112,7 +112,7 @@
       }
     }
   }
-
+  
   // 定时器版本
   const throttle = (fn, delay) => {
     let timer = null

@@ -49,7 +49,7 @@ function myNew() {
 function myNew1(context, ...args) {
   // const constr = Array.prototype.shift.call(arguments)
   let obj = Object.create(context.constructor)
-  const result = context.apply(obj, args)
+  const result = context.call(obj, ...args)
 
   // new 如果返回undefined、null和基本类型时，都会返回新对象；而只有返回对象时，才会返回构造函数的返回值
   return result instanceof Object ? result : obj
