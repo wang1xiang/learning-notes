@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div {
+      margin-bottom: 24px;
+      width: 0;
+      height: 0;
+    }
+    .container {
+      border: 100px solid;
+      border-color: yellowgreen skyblue pink blue;
+    }
+    .top {
+      border-top: 100px solid yellowgreen;
+      border-right: 100px solid transparent;
+      border-left: 100px solid transparent;
+    }
+    .left {
+      border-left: 100px solid blue;
+      border-top:  100px solid transparent;
+      border-bottom: 100px solid transparent;
+    }
+    .top-left {
+      border-top: 100px solid red;
+      border-right: 100px solid transparent;;
+    }
+    .sector {
+      border: 100px solid;
+      border-color: yellowgreen skyblue pink blue;
+      border-radius: 100px;
+    }
+    .top-sector {
+      border-top: 100px solid yellowgreen;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 100px solid transparent;
+      border-radius: 100px;
+    }
+    .left-sector {
+      border-left: 100px solid yellowgreen;
+      border-top: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 100px solid transparent;
+      border-radius: 100px;
+    }
+    .square {
+      width: 10%;
+      height: 10vw;
+      background-color: #c30;
+    }
+    .square {
+      width: 10%;
+      height: 0;
+      /* padding-top: 10%; */
+      padding-bottom: 10%;
+      background: orange;
+    }
+  </style>
+</head>
+<body>
+  <div class="container"></div>
+  <!-- 三角形 -->
+  <div class="top"></div>
+  <div class="left"></div>
+  <div class="top-left"></div>
+  <!-- 扇形 -->
+  <div class="sector"></div>
+  <div class="top-sector"></div>
+  <div class="left-sector"></div>
+  <!-- 正方形 -->
+  <div class="square"></div>
+</body>
+</html>

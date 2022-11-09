@@ -258,17 +258,25 @@ markyun.Event = {
 
 #### 异步加载 JS 的方式有哪些？
 
+- script
+  
+  如果没有async和defer属性，浏览器会立即加载并执行脚本，阻塞HTML解析，下载并执行完脚本会才会继续解析HTML
+
 - script 标签的 async 属性
 
-  HTML5 新增异步支持，执行完之前会阻止 onload 事件的触发，
+  解析HTML的同时进行脚本的异步下载，下载完成立马执行，可能会阻断HTML的解析
 
 - script 的 defer 属性
 
-  规定是否对脚本执行进行延迟，直到页面加载为止：只支持 IE
+  解析HTML同时进行脚本的异步下载，等HTML解析完成后（DomContentLoaded事件执行之前）再按照顺序执行脚本
 
 - onload 时的异步加载
 
   创建 script 标签，插入到 DOM 中，加载完毕后 callback
+
+- 区别
+
+  - async属性不能保证脚本加载执行的顺序、defer可以保证按照顺序执行
 
 #### AMD 和 DommonJS 的理解
 
@@ -285,12 +293,14 @@ markyun.Event = {
 #### indexOf 和 includes
 
 - indexOf 不够语义化，含义是找到对应值第一次出现的位置，要去比较是否不等于-1，表达起来不直观；而且内部时使用严格相等运算符（===）进行判断，会导致 NaN 误判
+
 ```js
 [NaN].indexOf(NaN)
 -1
 [NaN].includes(NaN)
 true
 ```
+
 #### Promise 防止某一个 promise 失败而导致整个 promise 失败
 
 - 使用 Promise.allSettled
