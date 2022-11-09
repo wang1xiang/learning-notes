@@ -60,20 +60,20 @@
 - loader 的执行顺序是和配置的顺序是相反
 
 ```js
-const marked = require('marked')
+const marked = require("marked");
 
 module.exports = (source) => {
-  const html = marked(source)
+  const html = marked(source);
 
-  return html
-}
+  return html;
+};
 module: {
   rules: [
     {
       test: /.md$/,
-      use: ['html-loader', './markdown-loader'],
+      use: ["html-loader", "./markdown-loader"],
     },
-  ]
+  ];
 }
 ```
 
@@ -106,3 +106,10 @@ webpack 启动后，在读取配置的过程中会先执行 new MyPlugin(options
 在初始化 compiler 对象后，再调用 myPlugin.apply(compiler) 给插件实例传入 compiler 对象。
 插件实例在获取到 compiler 对象后，就可以通过 compiler.plugin(事件名称, 回调函数) 监听到 Webpack 广播出来的事件。
 并且可以通过 compiler 对象去操作 webpack。
+
+8. webpack 对 css 的处理
+
+- webpack 在 loader 的辅助下，可以处理 css，css-loader 和 style-loader
+- css-loader: 导入 CSS 模块，对 CSS 代码进行编译处理，转换成webpack能够处理的资源
+- style-loader：创建 style 标签，把css-loader解析后的内容挂载到html页面中
+- css-loader的执行顺序一定要放在style-loader前面，只有完成编译才可以对css代码进行插入；若提前插入未编译的代码，那么webpack是无法理解这些东西的，会报错

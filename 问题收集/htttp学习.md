@@ -5,7 +5,7 @@
   简单快速、灵活(任意类型由 Content-Type 标记)、无连接(请求完成断开连接)、无状态、支持 B/S 及 C/S
 - URL(Uniform Resource Locator 统一资源定位符)
   http 使用统一资源标识符(URI Uniform Resource Identifiers)来传输数据和建立连接，URL 是特殊的 URI
-- URL 构成(http://www.aspxfans.com:8080/news/index.asp?boardID=5&ID=24618&page=1#name)
+- URL 构成(<http://www.aspxfans.com:8080/news/index.asp?boardID=5&ID=24618&page=1#name>)
   包括：1.协议部分 http 或 ftp 等<br> 2.域名部分：www.aspxfans.com<br> 3.端口部分：端口不是必须，如果省略将采用默认端口<br> 4.虚拟目录部分：第一个/到最后一个/是虚拟目录部分，/news/<br> 5.文件名部分：从域名后的最后一个'/'开始到'?'为止，index.asp<br> 6.锚部分：从'#'开始到最后，都是锚部分，name<br> 7.参数部分：从'?'开始到'#'之间都是参数
 - URL 和 URI 关系
   URI 是 Uniform Resource Identifier，统一资源标识符，用来唯一的表示一个资源(web 上可用的资源：图片、文档、视频、程序)都是 URI 来定位的

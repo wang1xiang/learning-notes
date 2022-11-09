@@ -24,15 +24,36 @@
 
 - `sessionStorage` 的数据在浏览器关闭后自动删除
 
+- DOM 查询操作、querySelector()和 querySelectorAll() .类名/#ID
+
+- 拖放
+
+  设置元素 draggable="true"即可拖放
+
+##### 说一下 web worker
+
+HTML 页面如果执行脚本时，页面状态是不可响应的，而 web worker 是运行在后台的简 js，独立于其他脚本、不会影响页面性能。通过 postMessage 将结果传回到主线程，这样在复杂操作的时候，就不会阻塞主线程了
+
+创建 web worker
+
+1. 检测浏览器是否支持
+2. 创建 web worker 文件
+3. 创建 web worker 对象
+
 ##### 语义化
 
 - 用正确的标签做正确的事
 
-- 计算机能快速读懂内容，高效处理信息，对搜索引擎更友好
-- 页面结构清晰
+- 计算机能快速读懂内容，高效处理信息，对搜索引擎更友好，有助于爬虫获取更多的有效信息
 - 有利于 SEO
-- 方便其他设备解析
+- 页面结构清晰，没有 CSS 样式下，页面也能呈现更好的内容结构
 - 便于团队开发和维护，语义化更具有可读性
+- header、footer、nav、section、main、aside
+
+##### src 和 href 的区别
+
+- src 主要用于加载 js，会阻塞 html 内容的加载，直到 js 文件加载、编译并执行完毕才会继续加载 html 内容，所以 js 内容一般放在页面底部
+- href 主要加载 css 等、当浏览器识别到时，不会阻塞 html 内容的加载，而是会并行下载处理
 
 ##### 区分 HTML 和 HTML5
 
@@ -41,7 +62,7 @@
 
 ##### DOCTYPE 作用
 
-<!Doctype>声明位于文档中的最前面，处于<html>标签之前。告知浏览器的解析器，用什么文档类型规范来解析这个文档。
+<!Doctype>声明位于文档中的最前面，处于<html>标签之前。告知浏览器的解析器，用什么文档类型规范（Html或XHtml）来解析这个文档，不同的渲染模式会影响浏览器对 CSS 代码甚⾄ JavaScript 脚本的解析
 
 ##### HTML5 离线缓存原理
 
@@ -109,9 +130,10 @@
 
 #### meta 标签
 
+- meta 标签由 name 和 content 属性定义，描述网页文档的属性，比如作者、网页描述、关键词等
 - charset 声明文档字符编码
 - description、keywords、author 等页面描述
-- viewport 为移动设备添加 viewport
+- viewport 为适配移动端，可以控制视口的大小和比例
 - cache-control、expires 设置页面缓存状态
 
 ### attribute 和 property 的区别是什么？
@@ -173,6 +195,7 @@
   Ctrl + F5 强制刷新的时候，会暂时禁用强缓存和协商缓存。
 
 - 配置
+
   ```js
   // 1.服务端配置
   res.setHeader('max-age': '3600 public')
@@ -306,6 +329,7 @@ js 操作 cookie 使用 document.cookie
 
 - 修改
   重新赋值，要保证 path 和 domain 两个值不变，否则会添加新的 cookie
+
   ```js
   document.cookie =
     "uid=123;expires=Mon Jan 04 2082 17:42:40 GMT;path=/;secure;";
@@ -402,3 +426,50 @@ function delCookie(name) {
   }
 }
 ```
+
+##### iframe 优点和缺点
+
+优点
+
+1. 用于加载速度较慢的内容
+2. 可以使脚本并行下载
+3. 可以实现跨子域
+
+缺点
+
+1. iframe 会阻塞主页面的 onload 事件
+2. 会产生很多页面不容易管理
+
+##### 渐进增强和优雅降级
+
+- 渐进增强：针对低版本浏览器进行页面重构，保证基本的功能情况下，再针对高级浏览器进行效果、交互等方面的改进，提升用户体验
+- 优雅降级：一开始就构建完整的功能，然后再针对低版本浏览器进行兼容
+
+##### 从浏览器地址栏输入 url 到请求返回发生了什么
+
+1. 浏览器像 DNS 服务器请求解析该 URL 中域名所对应的 IP 地址（DNS 作用是将主机名转换为 IP 地址）
+2. 解析到 IP 地址后开始进行 TCP 连接，三次握手确认双方的接收和发送能力
+3. 浏览器发送 http 请求，读取服务端文件
+4. 服务器响应请求并返回 http 报文
+5. 浏览器解析 HTML 文件并渲染页面
+
+   - 自上而下解析 HTML 文件生成 DOM 节点树
+   - 根据 CSS 生成 CSSOM（CSS Object Mode）树，不阻塞 DOM 树但阻塞 render 树
+   - 遇到 script 时，判断文件的 async 和 defer 属性，加载并执行 js 造成页面渲染的阻塞
+   - DOM 树和 CSSOM 树结合生成 render 树
+   - 布局（layout）：根据渲染树将节点树的每一个节点布局再屏幕上的正确位置
+   - 绘制（painting）：遍历渲染树绘制所有节点，为每个节点适用对应的样式
+
+   优化:
+
+   1. HTML 文档结构层次尽量少，不深于 6 层
+   2. 脚本放后
+   3. 少量首屏样式放在内联样式中，减少请求
+   4. 样式结构简单明了
+   5. 脚本中尽量减少 DOM 操作，避免过度触发回流
+   6. 断开 TCP 链接
+
+    如何查看性能指标：
+    1. network查看各种资源请求的情况
+    2. performance查看页面各项性能的火焰图、白屏时间、FPS、资源加载时间、longtask等信息
+6. TCP四次挥手，断开连接
