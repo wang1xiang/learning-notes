@@ -96,3 +96,28 @@ for (let i of entries(obj)) {
 for (let [key, value] of entries(obj)) {
   console.log(key, value)
 }
+
+/** 数组乱序 */
+const arr = [12, 3, 4, 5, 5]
+const length = arr.length;
+for (let i = 0; i < length; i++) {
+  const randomIndex = Math.round(Math.random() * (length - 1 - i)) + i;
+  [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
+}
+console.log(arr);
+
+/** 数组扁平化 */
+const arr = [1, [2, 3, [4, 5]]]
+const flatten = (arr) => {
+  const result = [];
+  for (let item of arr) {
+    console.log(item);
+    if (Array.isArray(item)) {
+      result = [...result, ...flatten(item)];
+    } else {
+      result.push(item);
+    }
+  }
+  return result;
+}
+console.log(flatten(arr));

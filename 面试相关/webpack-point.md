@@ -23,6 +23,7 @@
 - webpack 适用于大型负责项目构建
 - rollup 适用于基础库的打包，比如 vue、react
 - parcel 适用于简单实验性项目，傻瓜式配置，满足低门槛快速看到效果
+- Webpack和Rollup在不同场景下，都能发挥自身优势作用。Webpack对于代码分割和静态资源导入有着“先天优势”，并且支持热模块替换(HMR)，而Rollup并不支持，所以当项目需要用到以上，则可以考虑选择Webpack。但是，Rollup对于代码的Tree-shaking和ES6模块有着算法优势上的支持，若你项目只需要打包出一个简单的bundle包，并是基于ES6模块开发的，可以考虑使用Rollup。
 
 5. loader 和 plugins 区别
 
@@ -43,15 +44,16 @@
 
 6. webpack 热更新原理
 
-不用刷新浏览器就可以将变更的模块替换旧的模块
+webpack热更新也叫做热替换HMR(Hot Module Replacement)，指的是在不刷新浏览器时就可以将变更的模块替换旧的模块
 
-- 修改文件，文件系统接收更新并通知 webpack
-- webpack 重新编译构建一个或多个模块，并通知 HMR 服务器进行更新
-- HMR Server 使用 WebSocket 通过 HMR runtime 需要更新，HMR 运行时通过 HTTP 请求更新 jsonp
+- webpack-dev-server启东时开启watch用来监听文件变化，同时会开启一个websock与浏览器进行通信
+- 当修改文件，文件系统接收更新并通知 webpack
+- webpack 重新编译打包编译，并将编译结果放在内存中
+- HMR Server 使用 WebSocket 将需要更新的chunk的hash 传递给 HMR runtime 提示此模块需要更新，HMR 运行时通过 HTTP 请求更新 jsonp
 - HMR 运行时替换更新中的模块，如果确定这些模块无法更新时，则触发整个页面刷新
 - hot-module-replacement-plugin 的作用是提供 HMR 的 runtime，并且将 runtime 注入到 bundle.js 代码里面去。一旦磁盘里面的文件修改，那么 HMR server 会将有修改的 js module 信息发送给 HMR runtime，然后 HMR runtime 去局部更新页面的代码。因此这种方式可以不用刷新浏览器。
 
-7. 是否写过 Loader 和 Plugin？描述一下编写 loader 或 plugin 的思路？
+1. 是否写过 Loader 和 Plugin？描述一下编写 loader 或 plugin 的思路？
 
    **loader**
 

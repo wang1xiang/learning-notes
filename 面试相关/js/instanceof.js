@@ -53,3 +53,10 @@ let d = ''
 console.log(getType(d))
 console.log(instanceOf(d, String))
 console.log(instanceOf(d, Object))
+const arr = [12, 3, 4, 5, 5]
+const length = arr.length;
+for (let i = 0; i < length; i++) {
+  const randomIndex = Math.round((Math.random() * (length - 1))) + i;
+  [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
+}
+console.log(arr);
