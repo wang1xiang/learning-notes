@@ -16,7 +16,7 @@ class MyPromise {
   reason = undefined
 
   successCallBack = []
-  failCallbak = []
+  failCallback = []
   resolve = (value) => {
     if (this.status !== PENDING) return
     this.value = value
@@ -29,16 +29,16 @@ class MyPromise {
     if (this.status !== PENDING) return
     this.reason = reason
     this.status = REJECTED
-    while (this.failCallbak.length) {
-      this.failCallbak.shift()(this.reason)
+    while (this.failCallback.length) {
+      this.failCallback.shift()(this.reason)
     }
   }
-  then(successCallBack, failCallbak) {
+  then(successCallBack, failCallback) {
     successCallBack =
       typeof successCallBack === 'function' ? successCallBack : (value) => value
-    failCallbak =
-      typeof failCallbak === 'function'
-        ? failCallbak
+    failCallback =
+      typeof failCallback === 'function'
+        ? failCallback
         : (reason) => {
             throw reason
           }
@@ -55,7 +55,7 @@ class MyPromise {
       } else if (this.status === REJECTED) {
         setTimeout(() => {
           try {
-            let x = failCallbak(this.reason)
+            let x = failCallback(this.reason)
             resolvePromise(promise2, x, resolve, reject)
           } catch (e) {
             reject(e)
@@ -72,10 +72,10 @@ class MyPromise {
             }
           }, 0)
         })
-        this.failCallbak.push(() => {
+        this.failCallback.push(() => {
           setTimeout(() => {
             try {
-              let x = failCallbak(this.reason)
+              let x = failCallback(this.reason)
               resolvePromise(promise2, x, resolve, reject)
             } catch (e) {
               reject(e)
@@ -134,8 +134,8 @@ class MyPromise {
     )
   }
   // 处理失败情况 不用传递失败回调 用catch捕获
-  catch(failCallbak) {
-    return this.then(undefined, failCallbak)
+  catch(failCallback) {
+    return this.then(undefined, failCallback)
   }
 }
 function resolvePromise(promise, x, resolve, reject) {

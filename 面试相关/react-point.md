@@ -5,7 +5,7 @@
 React 是一个网页 UI 框架，通过组件化的思想解决视图层开发复用的问题。
 它的核心设计思路有三点：声明式、组件化和通用性
 
-- 声明式：以声明式编写UI，可以使代码更加可靠，方便调试
+- 声明式：以声明式编写 UI，可以使代码更加可靠，方便调试
 - 组件化：在于视图的拆分与模块复用，做到高内聚低耦合
 - 通用性：在于一次学习随处编写，比如 React-DOM、React-Native 开发原生应用、node 进行服务端渲染
 
@@ -117,24 +117,25 @@ React 利用事件委托特性
 
 - 同步场景
 
-  setTimeout中
+  setTimeout 中
+
 - 异步场景
-  
-  react会将setState放入队列中逐一执行，合并state数据，完成后执行回调，根据结果更新虚拟DOM触发渲染
+
+  react 会将 setState 放入队列中逐一执行，合并 state 数据，完成后执行回调，根据结果更新虚拟 DOM 触发渲染
 
 ## 状态管理
 
 ### redux
 
-- 单一数据源：整个应用的state被存储在一颗object tree中
-- 纯函数reducer：为了描述Action如何改变状态树，需要编写一个纯函数Reducer
-- state只读：唯一可改变state的方法就是Action  
+- 单一数据源：整个应用的 state 被存储在一颗 object tree 中
+- 纯函数 reducer：为了描述 Action 如何改变状态树，需要编写一个纯函数 Reducer
+- state 只读：唯一可改变 state 的方法就是 Action
 
-副作用：如Ajax请求异步操作，使函数在执行过程中，产生不同变化，这样与外界的交互统称为副作用，常见的副作用就是发一个网络请求， 需要页面先展示loading，再根据请求成功与否展示不同的页面
+副作用：如 Ajax 请求异步操作，使函数在执行过程中，产生不同变化，这样与外界的交互统称为副作用，常见的副作用就是发一个网络请求， 需要页面先展示 loading，再根据请求成功与否展示不同的页面
 
 ### mobx
 
-mobx5之前使用Object.defineProperty，mobx5之后使用Proxy
+mobx5 之前使用 Object.defineProperty，mobx5 之后使用 Proxy
 
 ## 渲染流程
 
@@ -142,49 +143,49 @@ mobx5之前使用Object.defineProperty，mobx5之后使用Proxy
 
 - react：主要工作是组件实现、更新调度等基层工作
 - react-dom：提供在网页上渲染的基础
-正是因为有这样流程，当react在开发IOS、Android等开发时，只需要通过React-Native提供的Native层元素渲染即可完成
+  正是因为有这样流程，当 react 在开发 IOS、Android 等开发时，只需要通过 React-Native 提供的 Native 层元素渲染即可完成
 
-### 虚拟DOM优势
+### 虚拟 DOM 优势
 
-- 大量的直接操作DOM容易引起网页性能下降
-- React通过虚拟DOM的diff算法批量更新DOM，提升页面性能
-- 首次渲染或微量操作的时候会比真实DOM慢
+- 大量的直接操作 DOM 容易引起网页性能下降
+- React 通过虚拟 DOM 的 diff 算法批量更新 DOM，提升页面性能
+- 首次渲染或微量操作的时候会比真实 DOM 慢
 
-### 对比其他框架，react的diff算法有何不同
+### 对比其他框架，react 的 diff 算法有何不同
 
-#### diff算法
+#### diff 算法
 
-diff算法是指生成补丁的方式，主要用于虚拟DOM树变化更新真实DOM，所以diff算法存在这样一个过程：触发更新 -> 生成补丁 -> 应用补丁
+diff 算法是指生成补丁的方式，主要用于虚拟 DOM 树变化更新真实 DOM，所以 diff 算法存在这样一个过程：触发更新 -> 生成补丁 -> 应用补丁
 
-react diff算法采用深度优先遍历，但传统的方式效率较低，为了优化效率，才用了“分治”的方式，将单一节点比对转换为三种类型节点的比对，分别是：树、组件及元素，以此来提升效率
+react diff 算法采用深度优先遍历，但传统的方式效率较低，为了优化效率，才用了“分治”的方式，将单一节点比对转换为三种类型节点的比对，分别是：树、组件及元素，以此来提升效率
 
-- 树比对：由于网页视图中很少有跨层级的节点移动，所以两颗虚拟DOM树只对同层级节点进行比较
+- 树比对：由于网页视图中很少有跨层级的节点移动，所以两颗虚拟 DOM 树只对同层级节点进行比较
 - 组件比对：如果两个组件同一类型则进行树比对，如果不是就放入补丁中
 - 元素比对：主要发生在同层级中，通过标记节点操作生成补丁
-  
-react16后引入fiber架构，为了使整个过程可暂停恢复，节点与树分别采用了fiberNode和fiberTree进行重构，fiberNode可以直接找到兄弟和子节点，更新过程有current和workInProgress两棵树双缓存完成，workInProgress Tree更新完成后再根据修改current相关指针去指向新的节点
 
-#### 与vue比较
+react16 后引入 fiber 架构，为了使整个过程可暂停恢复，节点与树分别采用了 fiberNode 和 fiberTree 进行重构，fiberNode 可以直接找到兄弟和子节点，更新过程有 current 和 workInProgress 两棵树双缓存完成，workInProgress Tree 更新完成后再根据修改 current 相关指针去指向新的节点
 
-- 与React相似，未采用fiber架构
-- react拥有完整的diff算法策略，并且拥有随时中断更新的时间切片能力，在大批量更新节点的极端情况下拥有更友好的交互体验
-- vue整体策略与react对齐，但缺乏时间切片能力，但并不意味vue性能更差，因为在vue3初期引用过，后来收益不高移除了
+#### 与 vue 比较
 
-### 解释React的渲染流程
+- 与 React 相似，未采用 fiber 架构
+- react 拥有完整的 diff 算法策略，并且拥有随时中断更新的时间切片能力，在大批量更新节点的极端情况下拥有更友好的交互体验
+- vue 整体策略与 react 对齐，但缺乏时间切片能力，但并不意味 vue 性能更差，因为在 vue3 初期引用过，后来收益不高移除了
 
-- React渲染过程大致15版本与16版本大致一致，但协调阶段不相同，React15为Stack Reconciler，16后为fiber Reconciler，这个协调过程也就是React的diff算法。
-- Stack Reconciler核心调度方式是递归，
-- Fiber Reconciler调度方式有两个特点：一是协作式多任务模式，调度线程会被优先级高的主线程打断，通过requestIdleCallback实现；二是策略优先级，调度任务通过标记tag的方式分优先级，标记为head这种可以优先执行，Fiber Reconciler的基本单位是fiber，fiber包含指向父、子和兄弟节点的引用，为diff工作的双向链表提供了实现基础，fiber架构下 生命周期被划分为了Render和commit阶段，Render阶段可中断可停止，只要是为了构建workInProgress Tree计算出差异，以 current Tree为基础，将每个fiber作为一个基本单位，自下而上的逐个节点检查被构建workInProgress树，这个过程不再是递归而是基于循环完成，执行上通过requestIdleCallBack来执行任务（work），每个work执行完后检查是否有更高优先级任务，有则让位，无则继续；commit阶段需要处理Effect列表，根据diff更新DOM树，回调生命周期，此阶段同步执行不可中断、暂停，所以一般不要在componentDidMount、componentDidUpdate、componentWillUnmount中执行计算量大的任务
-- 如果只是一般场景stack Reconciler和fiber Reconciler差距并不大，但在动画、画布等场景下Stack Reconciler会长时间占用主线程，造成卡顿；fiber Reconciler的设计就能带来高性能的表现
+### 解释 React 的渲染流程
 
-### stack Reconciler为什么不支持return 数组
+- React 渲染过程大致 15 版本与 16 版本大致一致，但协调阶段不相同，React15 为 Stack Reconciler，16 后为 fiber Reconciler，这个协调过程也就是 React 的 diff 算法。
+- Stack Reconciler 核心调度方式是递归，
+- Fiber Reconciler 调度方式有两个特点：一是协作式多任务模式，调度线程会被优先级高的主线程打断，通过 requestIdleCallback 实现；二是策略优先级，调度任务通过标记 tag 的方式分优先级，标记为 head 这种可以优先执行，Fiber Reconciler 的基本单位是 fiber，fiber 包含指向父、子和兄弟节点的引用，为 diff 工作的双向链表提供了实现基础，fiber 架构下 生命周期被划分为了 Render 和 commit 阶段，Render 阶段可中断可停止，只要是为了构建 workInProgress Tree 计算出差异，以 current Tree 为基础，将每个 fiber 作为一个基本单位，自下而上的逐个节点检查被构建 workInProgress 树，这个过程不再是递归而是基于循环完成，执行上通过 requestIdleCallBack 来执行任务（work），每个 work 执行完后检查是否有更高优先级任务，有则让位，无则继续；commit 阶段需要处理 Effect 列表，根据 diff 更新 DOM 树，回调生命周期，此阶段同步执行不可中断、暂停，所以一般不要在 componentDidMount、componentDidUpdate、componentWillUnmount 中执行计算量大的任务
+- 如果只是一般场景 stack Reconciler 和 fiber Reconciler 差距并不大，但在动画、画布等场景下 Stack Reconciler 会长时间占用主线程，造成卡顿；fiber Reconciler 的设计就能带来高性能的表现
 
-stack Reconciler是递归遍历的方式，递归的情况下就只能返回一个节点
+### stack Reconciler 为什么不支持 return 数组
+
+stack Reconciler 是递归遍历的方式，递归的情况下就只能返回一个节点
 
 ### React 渲染异常
 
 1. 后端数据是否可靠：可选链操作符
-2. 兜底方案：错误边界ErrorBoundary
+2. 兜底方案：错误边界 ErrorBoundary
 
 性能优化
 
@@ -193,52 +194,53 @@ stack Reconciler是递归遍历的方式，递归的情况下就只能返回一�
 - 过早的优化是万恶之源
 - 保证业务快速上线远比代码质量更为重要
 - 重新渲染时发生什么
-  
-  当props或state发生变化时，react会将返回的元素与之前的元素进行对比，看是否有需要更新真实DOM
+
+  当 props 或 state 发生变化时，react 会将返回的元素与之前的元素进行对比，看是否有需要更新真实 DOM
+
 - 工具
-  
-  Chrome自带的performance查询javaScript执行栈的耗时
-  react devTool的Profiler分析组件渲染次数
+
+  Chrome 自带的 performance 查询 javaScript 执行栈的耗时
+  react devTool 的 Profiler 分析组件渲染次数
 
 - 解决方法
-  
-  memo缓存组件、PureComponent、shouldComponentUpdate
+
+  memo 缓存组件、PureComponent、shouldComponentUpdate
 
 ### 代码质量
 
 - 可分析性
 
-  - 定期code Review
-  - 代码检查工具：eslint prettier commitlint等
+  - 定期 code Review
+  - 代码检查工具：eslint prettier commitlint 等
   - 能快速定位线上代码：Sentry
 
 - 可改变性
-  
-  易于拓展、迭代  组件设计
+
+  易于拓展、迭代 组件设计
 
 ## React Hooks
 
-### React Hook使用限制
+### React Hook 使用限制
 
-- eslint-plugin-react-hooks检查
+- eslint-plugin-react-hooks 检查
 - 不要在循环、迭代中使用
-  
+
   底层是用链表，应保持顺序
 
 - 只能在函数式组件中使用
-  
-  设计初衷就是为了在函数式组件中使用state
 
-### useEffect和useLayoutEffect的区别
+  设计初衷就是为了在函数式组件中使用 state
+
+### useEffect 和 useLayoutEffect 的区别
 
 - 相同点
-  
-  - 函数签名一致，在源码中调用了同一个函数 useEffect源码中先调用mountEffect接着调用mountEffectImpl、useLayoutEffect先调用mountLayoutEffect最后还是调用mountEffectImpl，入参一致，返回值一致，函数签名完全相同
-  - 都是用于处理副作用：改变DOM、设置订阅、操作定时器等
+
+  - 函数签名一致，在源码中调用了同一个函数 useEffect 源码中先调用 mountEffect 接着调用 mountEffectImpl、useLayoutEffect 先调用 mountLayoutEffect 最后还是调用 mountEffectImpl，入参一致，返回值一致，函数签名完全相同
+  - 都是用于处理副作用：改变 DOM、设置订阅、操作定时器等
 
 - 不同点
-  
-  - useEffect是异步调用，适合绝大多数场景、useLayoutEffect是在所有DOM变化之后同步调用，用于调整DOM操作、调整样式避免页面闪烁等，同步处理所以要避免计算量大的任务
+
+  - useEffect 是异步调用，适合绝大多数场景、useLayoutEffect 是在所有 DOM 变化之后同步调用，用于调整 DOM 操作、调整样式避免页面闪烁等，同步处理所以要避免计算量大的任务
   - 未来趋势上两者并存，没有删减或合并计划，开发者根据情况使用
 
 ## React 生态
@@ -248,16 +250,17 @@ stack Reconciler是递归遍历的方式，递归的情况下就只能返回一�
 #### 实现原理
 
 - Hash
-  
-  切换hash的方式，监听浏览器hash变化
+
+  切换 hash 的方式，监听浏览器 hash 变化
+
 - History
-  
-  依靠html5的history API ，切换网址path，需要在服务端配置historyAPIFallback
+
+  依靠 html5 的 history API ，切换网址 path，需要在服务端配置 historyAPIFallback
 
 #### 工作方式
 
-- 设计模式：采用monorepo库管理，整体的组件通信上采用ContextAPI  
+- 设计模式：采用 monorepo 库管理，整体的组件通信上采用 ContextAPI
 
-- Context容器： Router与MemoryRouter，主要提供上下文消费组件
-- 直接消费者：提供路由匹配功能，分别是Route、Switch和Redirect
-- 与平台关联的功能组件：react-router-dom中的link、NavLink和react-router-native中DeepLinking（app跳转使用）
+- Context 容器： Router 与 MemoryRouter，主要提供上下文消费组件
+- 直接消费者：提供路由匹配功能，分别是 Route、Switch 和 Redirect
+- 与平台关联的功能组件：react-router-dom 中的 link、NavLink 和 react-router-native 中 DeepLinking（app 跳转使用）

@@ -50,7 +50,7 @@ webpack热更新也叫做热替换HMR(Hot Module Replacement)，指的是在不�
 - 当修改文件，文件系统接收更新并通知 webpack
 - webpack 重新编译打包编译，并将编译结果放在内存中
 - HMR Server 使用 WebSocket 将需要更新的chunk的hash 传递给 HMR runtime 提示此模块需要更新，HMR 运行时通过 HTTP 请求更新 jsonp
-- HMR 运行时替换更新中的模块，如果确定这些模块无法更新时，则触发整个页面刷新
+- HMR 运行时替换更新中的模块，如果确定这些模块无法更新时，则触发整个页面刷新ut
 - hot-module-replacement-plugin 的作用是提供 HMR 的 runtime，并且将 runtime 注入到 bundle.js 代码里面去。一旦磁盘里面的文件修改，那么 HMR server 会将有修改的 js module 信息发送给 HMR runtime，然后 HMR runtime 去局部更新页面的代码。因此这种方式可以不用刷新浏览器。
 
 1. 是否写过 Loader 和 Plugin？描述一下编写 loader 或 plugin 的思路？
